@@ -1,0 +1,48 @@
+<project name="ActiLifeAPIDemoJava" default="dist" basedir=".">
+	<description>
+        Builds the ActiLife API Demo Java application.
+    </description>
+
+	<property name="lib.dir" location="lib" />
+	<property name="src.dir" location="src" />
+	<property name="build.dir" location="build" />
+	<property name="dist.dir" location="dist" />
+	<property name="jar.name" value="ActiLifeAPIDemoJava.jar" />
+	<property name="jar.path" value="${dist.dir}/${jar.name}" />
+	<property name="main.class" value="com.theactigraph.actilife.api.Launcher" />
+
+	<target name="debug">
+		<echo>lib.dir = ${lib.dir}</echo>
+		<echo>src.dir = ${src.dir}</echo>
+		<echo>build.dir = ${build.dir}</echo>
+		<echo>dist.dir = ${dist.dir}</echo>
+		<echo>jar.name = ${jar.name}</echo>
+		<echo>jar.path = ${jar.path}</echo>
+	</target>
+
+	<target name="init" depends="debug">
+		<mkdir dir="${build.dir}" />
+	</target>
+
+	<target name="compile" depends="init" description="compile the source ">
+		<javac srcdir="${src.dir}" destdir="${build.dir}">
+			<classpath>
+				<fileset dir="${lib.dir}" includes="*.jar" />
+			</classpath>
+		</javac>
+	</target>
+
+	<target name="dist" depends="compile" description="generate the distribution">
+		<mkdir dir="${dist.dir}" />
+		<delete file="${jar.path}" />
+		<jar jarfile="${jar.path}" basedir="${build.dir}" includes="**/*.class">
+			<zipgroupfileset dir="${lib.dir}" includes="*.jar" />
+			<zipgroupfileset dir="${dist.dir}" includes="${jar.name}" />
+			<manifest>
+				<attribute name="Built-By" value="${user.name}" />
+				<attribute name="Main-Class" value="${main.class}" />
+			</manifest>
+		</jar>
+		<delete dir="${build.dir}" />
+	</target>
+</project>
