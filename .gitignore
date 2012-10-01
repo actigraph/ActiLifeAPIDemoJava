@@ -1,6 +1,12 @@
+# Source Files #
 *.class
+*.metadata
+*.settings
 
 # Package Files #
-*.jar
 *.war
 *.ear
+
+# Directories #
+build/
+dist/
