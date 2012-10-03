@@ -10,6 +10,8 @@ import java.util.logging.Logger;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.table.DefaultTableModel;
 
@@ -29,7 +31,11 @@ public class MainForm extends JFrameActionSender implements
 	/**
 	 * Model for device table. Allows for adding records on demand.
 	 */
-	private DefaultTableModel _tblDevicesModel = new DefaultTableModel();
+	private DefaultTableModel _tblWirelessDevicesModel = new DefaultTableModel();
+	/**
+	 * Model for device table. Allows for adding records on demand.
+	 */
+	private DefaultTableModel _tblUSBDevicesModel = new DefaultTableModel();
 	/**
 	 * A reference to this form for use with JDialogs.
 	 */
@@ -51,12 +57,15 @@ public class MainForm extends JFrameActionSender implements
 	 */
 	private String _lastSelectedDeviceAntId;
 	/**
-	 * UI components;
+	 * General buttons
 	 */
 	private javax.swing.JButton btnDebugConsole;
 	private javax.swing.JButton btnLaunchActiLife;
 	private javax.swing.JButton btnMinimizeActiLife;
 	private javax.swing.JButton btnRestoreActiLife;
+	/**
+	 * Wireless buttons
+	 */
 	private javax.swing.JButton btnWirelessBurstDialog;
 	private javax.swing.JButton btnWirelessIdentifyDialog;
 	private javax.swing.JButton btnWirelessInitializeDialog;
@@ -64,10 +73,36 @@ public class MainForm extends JFrameActionSender implements
 	private javax.swing.JButton btnWirelessScanStart;
 	private javax.swing.JButton btnWirelessScanStop;
 	private javax.swing.JButton btnWirelessClearList;
-	private javax.swing.JPanel jPanel1;
-	private javax.swing.JScrollPane jScrollPane1;
+	/**
+	 * USB buttons
+	 */
+	private javax.swing.JButton btnUSBList;
+	private javax.swing.JButton btnUSBClearList;
+	/**
+	 * Layout components
+	 */
+	private javax.swing.JPanel pnlWireless;
+	private javax.swing.JPanel pnlUSB;
+	private javax.swing.JScrollPane scrWireless;
+	private javax.swing.JScrollPane scrUSB;
 	private javax.swing.JTabbedPane jTabbedPane1;
-	private javax.swing.JTable tblDevices;
+	/**
+	 * Data containers
+	 */
+	private javax.swing.JTable tblWirelessDevices;
+	private javax.swing.JTable tblUSBDevices;
+
+	/**
+	 * Logical list of available tabs
+	 */
+	private enum Tab {
+		USB, Wireless
+	}
+
+	/**
+	 * Currently viewed tab
+	 */
+	private Tab currentTab;
 
 	/**
 	 * Application must be started with a reference to a pipe for communicating
@@ -83,11 +118,16 @@ public class MainForm extends JFrameActionSender implements
 	 * Helper method to refresh UI state based on current UI state.
 	 */
 	private void updateUI() {
-		Boolean rowSelected = (tblDevices.getSelectedRow() != -1);
-		btnWirelessBurstDialog.setEnabled(rowSelected);
-		btnWirelessIdentifyDialog.setEnabled(rowSelected);
-		btnWirelessRealTimeDialog.setEnabled(rowSelected);
-		btnWirelessInitializeDialog.setEnabled(rowSelected);
+		if (currentTab == Tab.Wireless) {
+			Boolean rowSelected = (tblWirelessDevices.getSelectedRow() != -1);
+			btnWirelessBurstDialog.setEnabled(rowSelected);
+			btnWirelessIdentifyDialog.setEnabled(rowSelected);
+			btnWirelessRealTimeDialog.setEnabled(rowSelected);
+			btnWirelessInitializeDialog.setEnabled(rowSelected);
+		} else if (currentTab == Tab.USB) {
+			// TODO: disable functionality buttons when they are added unless a
+			// device record is selected
+		}
 	}
 
 	/**
@@ -105,13 +145,39 @@ public class MainForm extends JFrameActionSender implements
 		_wirelessBurstDialog = new BurstDialog(_this, false);
 		_wirelessBurstDialog.setLocationRelativeTo(_this);
 
+		// general buttons
 		btnDebugConsole = new javax.swing.JButton();
 		btnLaunchActiLife = new javax.swing.JButton();
 		btnMinimizeActiLife = new javax.swing.JButton();
+
+		// layout
 		jTabbedPane1 = new javax.swing.JTabbedPane();
-		jPanel1 = new javax.swing.JPanel();
-		jScrollPane1 = new javax.swing.JScrollPane();
-		tblDevices = new javax.swing.JTable();
+		jTabbedPane1.addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent evt) {
+				javax.swing.JTabbedPane pane = (javax.swing.JTabbedPane) evt
+						.getSource();
+				switch (pane.getSelectedIndex()) {
+				case 0:
+					currentTab = Tab.USB;
+					break;
+				case 1:
+					currentTab = Tab.Wireless;
+					break;
+				}
+			}
+		});
+
+		pnlWireless = new javax.swing.JPanel();
+		pnlUSB = new javax.swing.JPanel();
+		scrWireless = new javax.swing.JScrollPane();
+		scrUSB = new javax.swing.JScrollPane();
+
+		// data
+		tblWirelessDevices = new javax.swing.JTable();
+		tblUSBDevices = new javax.swing.JTable();
+
+		// wireless buttons
 		btnWirelessRealTimeDialog = new javax.swing.JButton();
 		btnWirelessInitializeDialog = new javax.swing.JButton();
 		btnWirelessIdentifyDialog = new javax.swing.JButton();
@@ -120,6 +186,10 @@ public class MainForm extends JFrameActionSender implements
 		btnWirelessScanStop = new javax.swing.JButton();
 		btnWirelessClearList = new javax.swing.JButton();
 		btnRestoreActiLife = new javax.swing.JButton();
+
+		// USB buttons
+		btnUSBList = new javax.swing.JButton();
+		btnUSBClearList = new javax.swing.JButton();
 
 		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 		setTitle("ActiLife API Demo");
@@ -215,8 +285,8 @@ public class MainForm extends JFrameActionSender implements
 		btnWirelessClearList.setText("Clear List");
 		btnWirelessClearList.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				while (_tblDevicesModel.getRowCount() > 0) {
-					_tblDevicesModel.removeRow(0);
+				while (_tblWirelessDevicesModel.getRowCount() > 0) {
+					_tblWirelessDevicesModel.removeRow(0);
 				}
 			}
 		});
@@ -228,7 +298,56 @@ public class MainForm extends JFrameActionSender implements
 			}
 		});
 
-		_tblDevicesModel = new javax.swing.table.DefaultTableModel(
+		btnUSBList.setText("List Devices");
+		btnUSBList.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				onActionRequested(Action.USB_LIST, null);
+			}
+		});
+
+		btnUSBClearList.setText("Clear List");
+		btnUSBClearList.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				while (_tblUSBDevicesModel.getRowCount() > 0) {
+					_tblUSBDevicesModel.removeRow(0);
+				}
+			}
+		});
+
+		_tblUSBDevicesModel = new javax.swing.table.DefaultTableModel(
+				new Object[][] {
+
+				}, new String[] { "Serial Number", "Status", "Subject Name",
+						"Battery" }) {
+			boolean[] canEdit = new boolean[] { false, false, false, false };
+
+			public boolean isCellEditable(int rowIndex, int columnIndex) {
+				return canEdit[columnIndex];
+			}
+		};
+		tblUSBDevices.setModel(_tblUSBDevicesModel);
+		tblUSBDevices.getSelectionModel().addListSelectionListener(
+				new javax.swing.event.ListSelectionListener() {
+					public void valueChanged(ListSelectionEvent event) {
+						try {
+							_lastSelectedDeviceAntId = _tblUSBDevicesModel
+									.getValueAt(tblUSBDevices.getSelectedRow(),
+											0).toString();
+						} catch (ArrayIndexOutOfBoundsException e) {
+							// TODO why does this happen?
+						}
+						updateUI();
+					}
+				});
+
+		scrUSB.setViewportView(tblUSBDevices);
+		tblUSBDevices.getColumnModel().getColumn(0).setResizable(false);
+		tblUSBDevices.getColumnModel().getColumn(1).setResizable(false);
+		tblUSBDevices.getColumnModel().getColumn(2).setResizable(false);
+		tblUSBDevices.getColumnModel().getColumn(3).setResizable(false);
+
+		// wireless devices
+		_tblWirelessDevicesModel = new javax.swing.table.DefaultTableModel(
 				new Object[][] {
 
 				}, new String[] { "ANT ID", "Serial Number", "Status",
@@ -240,14 +359,15 @@ public class MainForm extends JFrameActionSender implements
 				return canEdit[columnIndex];
 			}
 		};
-		tblDevices.setModel(_tblDevicesModel);
-		tblDevices.getSelectionModel().addListSelectionListener(
+		tblWirelessDevices.setModel(_tblWirelessDevicesModel);
+		tblWirelessDevices.getSelectionModel().addListSelectionListener(
 				new javax.swing.event.ListSelectionListener() {
 					public void valueChanged(ListSelectionEvent event) {
 						try {
-							_lastSelectedDeviceAntId = _tblDevicesModel
-									.getValueAt(tblDevices.getSelectedRow(), 0)
-									.toString();
+							_lastSelectedDeviceAntId = _tblWirelessDevicesModel
+									.getValueAt(
+											tblWirelessDevices.getSelectedRow(),
+											0).toString();
 						} catch (ArrayIndexOutOfBoundsException e) {
 							// TODO why does this happen?
 						}
@@ -255,30 +375,78 @@ public class MainForm extends JFrameActionSender implements
 					}
 				});
 
-		jScrollPane1.setViewportView(tblDevices);
-		tblDevices.getColumnModel().getColumn(0).setResizable(false);
-		tblDevices.getColumnModel().getColumn(1).setResizable(false);
-		tblDevices.getColumnModel().getColumn(2).setResizable(false);
-		tblDevices.getColumnModel().getColumn(3).setResizable(false);
-		tblDevices.getColumnModel().getColumn(4).setResizable(false);
+		scrWireless.setViewportView(tblWirelessDevices);
+		tblWirelessDevices.getColumnModel().getColumn(0).setResizable(false);
+		tblWirelessDevices.getColumnModel().getColumn(1).setResizable(false);
+		tblWirelessDevices.getColumnModel().getColumn(2).setResizable(false);
+		tblWirelessDevices.getColumnModel().getColumn(3).setResizable(false);
+		tblWirelessDevices.getColumnModel().getColumn(4).setResizable(false);
 
-		org.jdesktop.layout.GroupLayout jPanel1Layout = new org.jdesktop.layout.GroupLayout(
-				jPanel1);
-		jPanel1.setLayout(jPanel1Layout);
-		jPanel1Layout
-				.setHorizontalGroup(jPanel1Layout
+		// USB tab
+		org.jdesktop.layout.GroupLayout pnlLayoutUSB = new org.jdesktop.layout.GroupLayout(
+				pnlUSB);
+		pnlUSB.setLayout(pnlLayoutUSB);
+		pnlLayoutUSB
+				.setHorizontalGroup(pnlLayoutUSB
 						.createParallelGroup(
 								org.jdesktop.layout.GroupLayout.LEADING)
-						.add(jPanel1Layout
+						.add(pnlLayoutUSB
 								.createSequentialGroup()
 								.addContainerGap()
-								.add(jPanel1Layout
+								.add(pnlLayoutUSB
 										.createParallelGroup(
 												org.jdesktop.layout.GroupLayout.LEADING)
-										.add(jScrollPane1,
+										.add(scrUSB,
 												org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
 												758, Short.MAX_VALUE)
-										.add(jPanel1Layout
+										.add(pnlLayoutUSB
+												.createSequentialGroup()
+												.add(btnUSBList)
+												.add(18, 18, 18)
+												.addPreferredGap(
+														org.jdesktop.layout.LayoutStyle.RELATED,
+														org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
+														Short.MAX_VALUE)
+												.add(18, 18, 18)
+												.add(btnUSBClearList)))
+								.addContainerGap()));
+		pnlLayoutUSB
+				.setVerticalGroup(pnlLayoutUSB
+						.createParallelGroup(
+								org.jdesktop.layout.GroupLayout.LEADING)
+						.add(pnlLayoutUSB
+								.createSequentialGroup()
+								.addContainerGap()
+								.add(pnlLayoutUSB
+										.createParallelGroup(
+												org.jdesktop.layout.GroupLayout.BASELINE)
+										.add(btnUSBList).add(btnUSBClearList))
+								.addPreferredGap(
+										org.jdesktop.layout.LayoutStyle.UNRELATED)
+								.add(scrUSB,
+										org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
+										298, Short.MAX_VALUE).addContainerGap()));
+
+		jTabbedPane1.addTab("USB", pnlUSB);
+
+		// Wireless tab
+		org.jdesktop.layout.GroupLayout pnlLayoutWireless = new org.jdesktop.layout.GroupLayout(
+				pnlWireless);
+		pnlWireless.setLayout(pnlLayoutWireless);
+		pnlLayoutWireless
+				.setHorizontalGroup(pnlLayoutWireless
+						.createParallelGroup(
+								org.jdesktop.layout.GroupLayout.LEADING)
+						.add(pnlLayoutWireless
+								.createSequentialGroup()
+								.addContainerGap()
+								.add(pnlLayoutWireless
+										.createParallelGroup(
+												org.jdesktop.layout.GroupLayout.LEADING)
+										.add(scrWireless,
+												org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
+												758, Short.MAX_VALUE)
+										.add(pnlLayoutWireless
 												.createSequentialGroup()
 												.add(btnWirelessScanStart)
 												.add(18, 18, 18)
@@ -297,14 +465,14 @@ public class MainForm extends JFrameActionSender implements
 												.add(18, 18, 18)
 												.add(btnWirelessBurstDialog)))
 								.addContainerGap()));
-		jPanel1Layout
-				.setVerticalGroup(jPanel1Layout
+		pnlLayoutWireless
+				.setVerticalGroup(pnlLayoutWireless
 						.createParallelGroup(
 								org.jdesktop.layout.GroupLayout.LEADING)
-						.add(jPanel1Layout
+						.add(pnlLayoutWireless
 								.createSequentialGroup()
 								.addContainerGap()
-								.add(jPanel1Layout
+								.add(pnlLayoutWireless
 										.createParallelGroup(
 												org.jdesktop.layout.GroupLayout.BASELINE)
 										.add(btnWirelessRealTimeDialog)
@@ -316,11 +484,11 @@ public class MainForm extends JFrameActionSender implements
 										.add(btnWirelessClearList))
 								.addPreferredGap(
 										org.jdesktop.layout.LayoutStyle.UNRELATED)
-								.add(jScrollPane1,
+								.add(scrWireless,
 										org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
 										298, Short.MAX_VALUE).addContainerGap()));
 
-		jTabbedPane1.addTab("Wireless", jPanel1);
+		jTabbedPane1.addTab("Wireless", pnlWireless);
 
 		org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(
 				getContentPane());
@@ -427,26 +595,56 @@ public class MainForm extends JFrameActionSender implements
 		if (e == null || e.getDevice() == null) {
 			return;
 		}
+
 		Boolean updated = false;
 		float roundedBattery = Utils.round(e.getDevice().getBattery(), 2);
-		Iterator rowIterator = _tblDevicesModel.getDataVector().iterator();
-		while (rowIterator.hasNext()) {
-			Vector<String> cols = (Vector<String>) rowIterator.next();
-			if (e.getDevice() != null)
-				if (cols.get(0).equals(e.getDevice().getAntId())) {
-					updated = true;
-					cols.set(1, e.getDevice().getSerial());
-					cols.set(2, e.getDevice().getStatus());
-					cols.set(3, e.getDevice().getSubject());
-					cols.set(4, roundedBattery + "v");
-				}
+		Iterator rowIterator = null;
+
+		switch (currentTab) {
+		case USB:
+			rowIterator = _tblUSBDevicesModel.getDataVector().iterator();
+			while (rowIterator.hasNext()) {
+				Vector<String> cols = (Vector<String>) rowIterator.next();
+				if (e.getDevice() != null)
+					if (cols.get(0).equals(e.getDevice().getSerial())) {
+						updated = true;
+						cols.set(1, e.getDevice().getStatus());
+						cols.set(2, e.getDevice().getSubject());
+						cols.set(3, roundedBattery + "v");
+					}
+			}
+			if (!updated) {
+				_tblUSBDevicesModel.addRow(new Object[] {
+						e.getDevice().getSerial(), e.getDevice().getStatus(),
+						e.getDevice().getSubject(), roundedBattery + "v" });
+			}
+			_tblUSBDevicesModel.fireTableDataChanged();
+			break;
+		case Wireless:
+			rowIterator = _tblWirelessDevicesModel.getDataVector().iterator();
+			while (rowIterator.hasNext()) {
+				Vector<String> cols = (Vector<String>) rowIterator.next();
+				if (e.getDevice() != null)
+					if (cols.get(0).equals(e.getDevice().getAntId())) {
+						updated = true;
+						cols.set(1, e.getDevice().getSerial());
+						cols.set(2, e.getDevice().getStatus());
+						cols.set(3, e.getDevice().getSubject());
+						cols.set(4, roundedBattery + "v");
+					}
+			}
+			if (!updated) {
+				_tblWirelessDevicesModel.addRow(new Object[] {
+						e.getDevice().getAntId(), e.getDevice().getSerial(),
+						e.getDevice().getStatus(), e.getDevice().getSubject(),
+						roundedBattery + "v" });
+			}
+			_tblWirelessDevicesModel.fireTableDataChanged();
+			break;
+		default:
+			return;
 		}
-		if (!updated) {
-			_tblDevicesModel.addRow(new Object[] { e.getDevice().getAntId(),
-					e.getDevice().getSerial(), e.getDevice().getStatus(),
-					e.getDevice().getSubject(), roundedBattery + "v" });
-		}
-		_tblDevicesModel.fireTableDataChanged();
+
 	}
 
 	@Override

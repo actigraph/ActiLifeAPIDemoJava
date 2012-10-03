@@ -231,6 +231,19 @@ public class PipeController implements IActionSenderListener {
 				}
 				return;
 			}
+			// usb_list
+			if (response.toString().equalsIgnoreCase("usb_list")) {
+				if (json.containsKey("payload")) {
+					StringMap device = (StringMap) json.get("payload");
+					// build up new device model
+					Device d = new Device();
+					if (device.get("device_serial") != null) {
+						d.setSerial(device.get("device_serial").toString());
+					}
+					onDeviceDiscovered(d);
+				}
+				return;
+			}
 		} catch (JsonParseException e) {
 			onExceptionRaised(e);
 		}
@@ -405,6 +418,9 @@ public class PipeController implements IActionSenderListener {
 			break;
 		case WIRELESS_DEVICE_BURST:
 			action.put("action", "wireless_device_burst");
+			break;
+		case USB_LIST:
+			action.put("action", "usb_list");
 			break;
 		default:
 			return;
