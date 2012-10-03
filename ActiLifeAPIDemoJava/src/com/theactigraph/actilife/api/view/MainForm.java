@@ -259,8 +259,7 @@ public class MainForm extends JFrameActionSender implements
 		btnWirelessBurstDialog.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (wirelessBurstDialog != null) {
-					wirelessBurstDialog
-							.setDeviceAntId(lastSelectedDeviceAntId);
+					wirelessBurstDialog.setDeviceAntId(lastSelectedDeviceAntId);
 					wirelessBurstDialog.setVisible(true);
 				}
 			}
@@ -402,12 +401,10 @@ public class MainForm extends JFrameActionSender implements
 										.add(pnlLayoutUSB
 												.createSequentialGroup()
 												.add(btnUSBList)
-												.add(18, 18, 18)
 												.addPreferredGap(
 														org.jdesktop.layout.LayoutStyle.RELATED,
 														org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
 														Short.MAX_VALUE)
-												.add(18, 18, 18)
 												.add(btnUSBClearList)))
 								.addContainerGap()));
 		pnlLayoutUSB
@@ -452,18 +449,18 @@ public class MainForm extends JFrameActionSender implements
 												.add(18, 18, 18)
 												.add(btnWirelessScanStop)
 												.add(18, 18, 18)
-												.add(btnWirelessClearList)
-												.addPreferredGap(
-														org.jdesktop.layout.LayoutStyle.RELATED,
-														org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-														Short.MAX_VALUE)
 												.add(btnWirelessInitializeDialog)
 												.add(18, 18, 18)
 												.add(btnWirelessIdentifyDialog)
 												.add(18, 18, 18)
 												.add(btnWirelessRealTimeDialog)
 												.add(18, 18, 18)
-												.add(btnWirelessBurstDialog)))
+												.add(btnWirelessBurstDialog)
+												.addPreferredGap(
+														org.jdesktop.layout.LayoutStyle.RELATED,
+														org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
+														Short.MAX_VALUE)
+												.add(btnWirelessClearList)))
 								.addContainerGap()));
 		pnlLayoutWireless
 				.setVerticalGroup(pnlLayoutWireless
