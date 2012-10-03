@@ -31,31 +31,31 @@ public class MainForm extends JFrameActionSender implements
 	/**
 	 * Model for device table. Allows for adding records on demand.
 	 */
-	private DefaultTableModel _tblWirelessDevicesModel = new DefaultTableModel();
+	private DefaultTableModel tblWirelessDevicesModel = new DefaultTableModel();
 	/**
 	 * Model for device table. Allows for adding records on demand.
 	 */
-	private DefaultTableModel _tblUSBDevicesModel = new DefaultTableModel();
+	private DefaultTableModel tblUSBDevicesModel = new DefaultTableModel();
 	/**
 	 * A reference to this form for use with JDialogs.
 	 */
-	private JFrame _this;
+	private JFrame refToThis;
 	/**
 	 * A dialog to run non-modal to show actions and responses.
 	 */
-	private DebugDialog _debugDialog;
+	private DebugDialog debugDialog;
 	/**
 	 * A dialog to show real time data for a wireless device.
 	 */
-	private RealTimeDialog _wirelessRealTimeDialog;
+	private RealTimeDialog wirelessRealTimeDialog;
 	/**
 	 * A dialog to download X minutes of raw device data via wireless.
 	 */
-	private BurstDialog _wirelessBurstDialog;
+	private BurstDialog wirelessBurstDialog;
 	/**
 	 * ANT ID of the last selected device.
 	 */
-	private String _lastSelectedDeviceAntId;
+	private String lastSelectedDeviceAntId;
 	/**
 	 * General buttons
 	 */
@@ -109,7 +109,7 @@ public class MainForm extends JFrameActionSender implements
 	 * with ActiLife.
 	 */
 	public MainForm() {
-		_this = this;
+		refToThis = this;
 		initComponents();
 		updateUI();
 	}
@@ -136,14 +136,14 @@ public class MainForm extends JFrameActionSender implements
 	 */
 	private void initComponents() {
 
-		_debugDialog = new DebugDialog(_this, false);
-		_debugDialog.setLocationRelativeTo(_this);
+		debugDialog = new DebugDialog(refToThis, false);
+		debugDialog.setLocationRelativeTo(refToThis);
 
-		_wirelessRealTimeDialog = new RealTimeDialog(_this, false);
-		_wirelessRealTimeDialog.setLocationRelativeTo(_this);
+		wirelessRealTimeDialog = new RealTimeDialog(refToThis, false);
+		wirelessRealTimeDialog.setLocationRelativeTo(refToThis);
 
-		_wirelessBurstDialog = new BurstDialog(_this, false);
-		_wirelessBurstDialog.setLocationRelativeTo(_this);
+		wirelessBurstDialog = new BurstDialog(refToThis, false);
+		wirelessBurstDialog.setLocationRelativeTo(refToThis);
 
 		// general buttons
 		btnDebugConsole = new javax.swing.JButton();
@@ -199,8 +199,8 @@ public class MainForm extends JFrameActionSender implements
 		btnDebugConsole.setText("Debug Console");
 		btnDebugConsole.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (_debugDialog != null) {
-					_debugDialog.setVisible(!_debugDialog.isShowing());
+				if (debugDialog != null) {
+					debugDialog.setVisible(!debugDialog.isShowing());
 				}
 			}
 		});
@@ -228,10 +228,10 @@ public class MainForm extends JFrameActionSender implements
 		btnWirelessRealTimeDialog.setText("Real Time");
 		btnWirelessRealTimeDialog.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (_wirelessRealTimeDialog != null) {
-					_wirelessRealTimeDialog
-							.setDeviceAntId(_lastSelectedDeviceAntId);
-					_wirelessRealTimeDialog.setVisible(true);
+				if (wirelessRealTimeDialog != null) {
+					wirelessRealTimeDialog
+							.setDeviceAntId(lastSelectedDeviceAntId);
+					wirelessRealTimeDialog.setVisible(true);
 				}
 			}
 		});
@@ -240,8 +240,8 @@ public class MainForm extends JFrameActionSender implements
 		btnWirelessInitializeDialog.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				InitializeDialog d;
-				d = new InitializeDialog(_this, true);
-				d.setLocationRelativeTo(_this);
+				d = new InitializeDialog(refToThis, true);
+				d.setLocationRelativeTo(refToThis);
 				d.setVisible(true);
 			}
 		});
@@ -250,7 +250,7 @@ public class MainForm extends JFrameActionSender implements
 		btnWirelessIdentifyDialog.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				StringMap args = new StringMap();
-				args.put("device_ant_id", _lastSelectedDeviceAntId);
+				args.put("device_ant_id", lastSelectedDeviceAntId);
 				onActionRequested(Action.WIRELESS_DEVICE_IDENTIFY, args);
 			}
 		});
@@ -258,10 +258,10 @@ public class MainForm extends JFrameActionSender implements
 		btnWirelessBurstDialog.setText("Burst");
 		btnWirelessBurstDialog.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (_wirelessBurstDialog != null) {
-					_wirelessBurstDialog
-							.setDeviceAntId(_lastSelectedDeviceAntId);
-					_wirelessBurstDialog.setVisible(true);
+				if (wirelessBurstDialog != null) {
+					wirelessBurstDialog
+							.setDeviceAntId(lastSelectedDeviceAntId);
+					wirelessBurstDialog.setVisible(true);
 				}
 			}
 		});
@@ -285,8 +285,8 @@ public class MainForm extends JFrameActionSender implements
 		btnWirelessClearList.setText("Clear List");
 		btnWirelessClearList.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				while (_tblWirelessDevicesModel.getRowCount() > 0) {
-					_tblWirelessDevicesModel.removeRow(0);
+				while (tblWirelessDevicesModel.getRowCount() > 0) {
+					tblWirelessDevicesModel.removeRow(0);
 				}
 			}
 		});
@@ -308,13 +308,13 @@ public class MainForm extends JFrameActionSender implements
 		btnUSBClearList.setText("Clear List");
 		btnUSBClearList.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				while (_tblUSBDevicesModel.getRowCount() > 0) {
-					_tblUSBDevicesModel.removeRow(0);
+				while (tblUSBDevicesModel.getRowCount() > 0) {
+					tblUSBDevicesModel.removeRow(0);
 				}
 			}
 		});
 
-		_tblUSBDevicesModel = new javax.swing.table.DefaultTableModel(
+		tblUSBDevicesModel = new javax.swing.table.DefaultTableModel(
 				new Object[][] {
 
 				}, new String[] { "Serial Number", "Status", "Subject Name",
@@ -325,12 +325,12 @@ public class MainForm extends JFrameActionSender implements
 				return canEdit[columnIndex];
 			}
 		};
-		tblUSBDevices.setModel(_tblUSBDevicesModel);
+		tblUSBDevices.setModel(tblUSBDevicesModel);
 		tblUSBDevices.getSelectionModel().addListSelectionListener(
 				new javax.swing.event.ListSelectionListener() {
 					public void valueChanged(ListSelectionEvent event) {
 						try {
-							_lastSelectedDeviceAntId = _tblUSBDevicesModel
+							lastSelectedDeviceAntId = tblUSBDevicesModel
 									.getValueAt(tblUSBDevices.getSelectedRow(),
 											0).toString();
 						} catch (ArrayIndexOutOfBoundsException e) {
@@ -347,7 +347,7 @@ public class MainForm extends JFrameActionSender implements
 		tblUSBDevices.getColumnModel().getColumn(3).setResizable(false);
 
 		// wireless devices
-		_tblWirelessDevicesModel = new javax.swing.table.DefaultTableModel(
+		tblWirelessDevicesModel = new javax.swing.table.DefaultTableModel(
 				new Object[][] {
 
 				}, new String[] { "ANT ID", "Serial Number", "Status",
@@ -359,12 +359,12 @@ public class MainForm extends JFrameActionSender implements
 				return canEdit[columnIndex];
 			}
 		};
-		tblWirelessDevices.setModel(_tblWirelessDevicesModel);
+		tblWirelessDevices.setModel(tblWirelessDevicesModel);
 		tblWirelessDevices.getSelectionModel().addListSelectionListener(
 				new javax.swing.event.ListSelectionListener() {
 					public void valueChanged(ListSelectionEvent event) {
 						try {
-							_lastSelectedDeviceAntId = _tblWirelessDevicesModel
+							lastSelectedDeviceAntId = tblWirelessDevicesModel
 									.getValueAt(
 											tblWirelessDevices.getSelectedRow(),
 											0).toString();
@@ -545,11 +545,11 @@ public class MainForm extends JFrameActionSender implements
 	 *            listener to be added
 	 */
 	synchronized public void addWirelessRealTimeListener(IActionSenderListener l) {
-		if (_wirelessRealTimeDialog != null) {
-			_wirelessRealTimeDialog.addListener(l);
+		if (wirelessRealTimeDialog != null) {
+			wirelessRealTimeDialog.addListener(l);
 		}
-		if (_wirelessBurstDialog != null) {
-			_wirelessBurstDialog.addListener(l);
+		if (wirelessBurstDialog != null) {
+			wirelessBurstDialog.addListener(l);
 		}
 	}
 
@@ -566,12 +566,12 @@ public class MainForm extends JFrameActionSender implements
 	 */
 	@Override
 	public void messageToDebug(MessageEventObject o) {
-		if (_debugDialog == null || o == null || o.getMessage() == null) {
+		if (debugDialog == null || o == null || o.getMessage() == null) {
 			return;
 		}
-		_debugDialog.appendText(o.getMessage());
+		debugDialog.appendText(o.getMessage());
 		if (!o.getMessage().endsWith("\n")) {
-			_debugDialog.appendText("\n");
+			debugDialog.appendText("\n");
 		}
 	}
 
@@ -602,7 +602,7 @@ public class MainForm extends JFrameActionSender implements
 
 		switch (currentTab) {
 		case USB:
-			rowIterator = _tblUSBDevicesModel.getDataVector().iterator();
+			rowIterator = tblUSBDevicesModel.getDataVector().iterator();
 			while (rowIterator.hasNext()) {
 				Vector<String> cols = (Vector<String>) rowIterator.next();
 				if (e.getDevice() != null)
@@ -614,14 +614,14 @@ public class MainForm extends JFrameActionSender implements
 					}
 			}
 			if (!updated) {
-				_tblUSBDevicesModel.addRow(new Object[] {
+				tblUSBDevicesModel.addRow(new Object[] {
 						e.getDevice().getSerial(), e.getDevice().getStatus(),
 						e.getDevice().getSubject(), roundedBattery + "v" });
 			}
-			_tblUSBDevicesModel.fireTableDataChanged();
+			tblUSBDevicesModel.fireTableDataChanged();
 			break;
 		case Wireless:
-			rowIterator = _tblWirelessDevicesModel.getDataVector().iterator();
+			rowIterator = tblWirelessDevicesModel.getDataVector().iterator();
 			while (rowIterator.hasNext()) {
 				Vector<String> cols = (Vector<String>) rowIterator.next();
 				if (e.getDevice() != null)
@@ -634,12 +634,12 @@ public class MainForm extends JFrameActionSender implements
 					}
 			}
 			if (!updated) {
-				_tblWirelessDevicesModel.addRow(new Object[] {
+				tblWirelessDevicesModel.addRow(new Object[] {
 						e.getDevice().getAntId(), e.getDevice().getSerial(),
 						e.getDevice().getStatus(), e.getDevice().getSubject(),
 						roundedBattery + "v" });
 			}
-			_tblWirelessDevicesModel.fireTableDataChanged();
+			tblWirelessDevicesModel.fireTableDataChanged();
 			break;
 		default:
 			return;
@@ -652,7 +652,7 @@ public class MainForm extends JFrameActionSender implements
 		if (o == null || o.getRealTimeSample() == null) {
 			return;
 		}
-		_wirelessRealTimeDialog.addSample(o.getRealTimeSample().getTime(), o
+		wirelessRealTimeDialog.addSample(o.getRealTimeSample().getTime(), o
 				.getRealTimeSample().getAxis1(), o.getRealTimeSample()
 				.getAxis2(), o.getRealTimeSample().getAxis3(), o
 				.getRealTimeSample().getLux(), o.getRealTimeSample().getHr());

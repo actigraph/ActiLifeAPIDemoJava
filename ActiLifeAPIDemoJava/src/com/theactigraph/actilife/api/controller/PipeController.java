@@ -39,7 +39,7 @@ public class PipeController implements IActionSenderListener {
 	/**
 	 * Lock for synchronizing pipe access.
 	 */
-	private final Object _pipeLock = new Object();
+	private final Object pipeLock = new Object();
 	/**
 	 * JSON Parser
 	 */
@@ -80,7 +80,7 @@ public class PipeController implements IActionSenderListener {
 								continue;
 							}
 							int bytesRead = 0;
-							synchronized (_pipeLock) {
+							synchronized (pipeLock) {
 								bytesRead = pipe.read(b, 0, b.length);
 							}
 							if (bytesRead > 0) {
@@ -429,7 +429,7 @@ public class PipeController implements IActionSenderListener {
 		String actionJSON = gson.toJson(action);
 		onMessageToDebug(actionJSON);
 		try {
-			synchronized (_pipeLock) {
+			synchronized (pipeLock) {
 				pipe.write(actionJSON.getBytes());
 			}
 		} catch (Exception e) {
