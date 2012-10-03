@@ -133,7 +133,7 @@ public class PipeController implements IActionSenderListener {
 				return;
 			}
 			// optionally need to know the error if not successful
-			if (Float.parseFloat(success.toString()) == 0) {
+			if (Boolean.parseBoolean(success.toString()) == false) {
 				if (error == null) {
 					onMessageToDisplay("A malformed response was received:\n\nMissing \"error\" element.");
 				} else {
