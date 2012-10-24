@@ -15,7 +15,7 @@ import com.theactigraph.actilife.api.models.Action;
  * @author jeremy.moore
  */
 @SuppressWarnings("serial")
-public class BurstDialog extends JDialogActionSender {
+public class WirelessBurstDialog extends JDialogActionSender {
 	/**
 	 * Device being operated on.
 	 */
@@ -28,7 +28,7 @@ public class BurstDialog extends JDialogActionSender {
 	/**
 	 * Creates new form NewJDialog
 	 */
-	public BurstDialog(java.awt.Frame parent, boolean modal) {
+	public WirelessBurstDialog(java.awt.Frame parent, boolean modal) {
 		super(parent, modal);
 		initComponents();
 	}

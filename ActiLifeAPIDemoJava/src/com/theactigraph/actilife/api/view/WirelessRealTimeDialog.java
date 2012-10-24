@@ -12,7 +12,7 @@ import com.theactigraph.actilife.api.models.Action;
  * @author jeremy.moore
  */
 @SuppressWarnings("serial")
-public class RealTimeDialog extends JDialogActionSender {
+public class WirelessRealTimeDialog extends JDialogActionSender {
 
 	/**
 	 * Model for device table. Allows for adding records on demand.
@@ -32,7 +32,7 @@ public class RealTimeDialog extends JDialogActionSender {
 	/**
 	 * Creates new form RealTimeDialog
 	 */
-	public RealTimeDialog(java.awt.Frame parent, boolean modal) {
+	public WirelessRealTimeDialog(java.awt.Frame parent, boolean modal) {
 		super(parent, modal);
 
 		initComponents();

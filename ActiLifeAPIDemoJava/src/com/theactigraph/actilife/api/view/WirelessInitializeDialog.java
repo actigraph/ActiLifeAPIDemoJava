@@ -6,7 +6,7 @@ package com.theactigraph.actilife.api.view;
  * @author jeremy.moore
  */
 @SuppressWarnings("serial")
-public class InitializeDialog extends javax.swing.JDialog {
+public class WirelessInitializeDialog extends javax.swing.JDialog {
 	/**
 	 * Device being operated on.
 	 */
@@ -18,7 +18,7 @@ public class InitializeDialog extends javax.swing.JDialog {
 	/**
 	 * Creates new form InitializeDialog
 	 */
-	public InitializeDialog(java.awt.Frame parent, boolean modal) {
+	public WirelessInitializeDialog(java.awt.Frame parent, boolean modal) {
 		super(parent, modal);
 		initComponents();
 	}

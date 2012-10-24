@@ -47,9 +47,9 @@ public class MainForm extends JFrameActionSender implements
 	/**
 	 * Wireless dialogs
 	 */
-	private RealTimeDialog wirelessRealTimeDialog;
-	private BurstDialog wirelessBurstDialog;
-	private InitializeDialog wirelessInitializeDialog;
+	private WirelessRealTimeDialog wirelessRealTimeDialog;
+	private WirelessBurstDialog wirelessBurstDialog;
+	private WirelessInitializeDialog wirelessInitializeDialog;
 	/**
 	 * ANT ID of the last selected device.
 	 */
@@ -138,11 +138,11 @@ public class MainForm extends JFrameActionSender implements
 		debugDialog.setLocationRelativeTo(refToThis);
 
 		// wireless dialogs
-		wirelessRealTimeDialog = new RealTimeDialog(refToThis, false);
+		wirelessRealTimeDialog = new WirelessRealTimeDialog(refToThis, false);
 		wirelessRealTimeDialog.setLocationRelativeTo(refToThis);
-		wirelessBurstDialog = new BurstDialog(refToThis, false);
+		wirelessBurstDialog = new WirelessBurstDialog(refToThis, false);
 		wirelessBurstDialog.setLocationRelativeTo(refToThis);
-		wirelessInitializeDialog = new InitializeDialog(refToThis, false);
+		wirelessInitializeDialog = new WirelessInitializeDialog(refToThis, false);
 		wirelessInitializeDialog.setLocationRelativeTo(refToThis);
 
 		// general buttons
