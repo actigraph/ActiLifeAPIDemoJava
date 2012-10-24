@@ -45,13 +45,11 @@ public class MainForm extends JFrameActionSender implements
 	 */
 	private DebugDialog debugDialog;
 	/**
-	 * A dialog to show real time data for a wireless device.
+	 * Wireless dialogs
 	 */
 	private RealTimeDialog wirelessRealTimeDialog;
-	/**
-	 * A dialog to download X minutes of raw device data via wireless.
-	 */
 	private BurstDialog wirelessBurstDialog;
+	private InitializeDialog wirelessInitializeDialog;
 	/**
 	 * ANT ID of the last selected device.
 	 */
@@ -139,11 +137,13 @@ public class MainForm extends JFrameActionSender implements
 		debugDialog = new DebugDialog(refToThis, false);
 		debugDialog.setLocationRelativeTo(refToThis);
 
+		// wireless dialogs
 		wirelessRealTimeDialog = new RealTimeDialog(refToThis, false);
 		wirelessRealTimeDialog.setLocationRelativeTo(refToThis);
-
 		wirelessBurstDialog = new BurstDialog(refToThis, false);
 		wirelessBurstDialog.setLocationRelativeTo(refToThis);
+		wirelessInitializeDialog = new InitializeDialog(refToThis, false);
+		wirelessInitializeDialog.setLocationRelativeTo(refToThis);
 
 		// general buttons
 		btnDebugConsole = new javax.swing.JButton();
@@ -239,10 +239,10 @@ public class MainForm extends JFrameActionSender implements
 		btnWirelessInitializeDialog.setText("Initialize");
 		btnWirelessInitializeDialog.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				InitializeDialog d;
-				d = new InitializeDialog(refToThis, true);
-				d.setLocationRelativeTo(refToThis);
-				d.setVisible(true);
+				if (wirelessInitializeDialog != null) {
+					wirelessInitializeDialog.setDeviceAntId(lastSelectedDeviceAntId);
+					wirelessInitializeDialog.setVisible(true);
+				}
 			}
 		});
 

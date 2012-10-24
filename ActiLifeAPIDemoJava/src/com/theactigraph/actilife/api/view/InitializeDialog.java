@@ -7,6 +7,10 @@ package com.theactigraph.actilife.api.view;
  */
 @SuppressWarnings("serial")
 public class InitializeDialog extends javax.swing.JDialog {
+	/**
+	 * Device being operated on.
+	 */
+	private String deviceAntId;
 
 	private javax.swing.JButton jButton1;
 	private javax.swing.JLabel jLabel1;
@@ -31,7 +35,7 @@ public class InitializeDialog extends javax.swing.JDialog {
 		jButton1.setText("Initialize");
 		jButton1.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				jButton1ActionPerformed(evt);
+				//
 			}
 		});
 
@@ -69,7 +73,15 @@ public class InitializeDialog extends javax.swing.JDialog {
 		pack();
 	}
 
-	private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
-		// TODO add your handling code here:
+	/**
+	 * Informs this dialog of which device we are doing a burst download for.
+	 * If a new device is set, we should clear the text area.
+	 * 
+	 * @param deviceAntId
+	 */
+	public void setDeviceAntId(String deviceAntId) {
+		if (this.deviceAntId != deviceAntId) {
+			this.deviceAntId = deviceAntId;
+		}
 	}
 }
