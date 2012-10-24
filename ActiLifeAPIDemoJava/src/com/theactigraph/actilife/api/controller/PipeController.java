@@ -240,6 +240,15 @@ public class PipeController implements IActionSenderListener {
 					if (device.get("device_serial") != null) {
 						d.setSerial(device.get("device_serial").toString());
 					}
+					if (device.get("device_status") != null) {
+						d.setStatus(device.get("device_status").toString());
+					}
+					if (device.get("device_subject") != null) {
+						d.setSubject(device.get("device_subject").toString());
+					}
+					if (device.get("device_battery") != null) {
+						d.setBattery(Float.parseFloat(device.get("device_battery").toString()));
+					}
 					onDeviceDiscovered(d);
 				}
 				return;
