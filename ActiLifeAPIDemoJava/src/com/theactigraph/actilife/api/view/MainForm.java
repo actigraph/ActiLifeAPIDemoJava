@@ -51,9 +51,14 @@ public class MainForm extends JFrameActionSender implements
 	private WirelessBurstDialog wirelessBurstDialog;
 	private WirelessInitializeDialog wirelessInitializeDialog;
 	/**
-	 * ANT ID of the last selected device.
+	 * USB dialogs
+	 */
+	private USBDownloadDialog usbDownloadDialog;
+	/**
+	 * The last selected device.
 	 */
 	private String lastSelectedDeviceAntId;
+	private String lastSelectedDeviceSerial;
 	/**
 	 * General buttons
 	 */
@@ -75,6 +80,7 @@ public class MainForm extends JFrameActionSender implements
 	 * USB buttons
 	 */
 	private javax.swing.JButton btnUSBList;
+	private javax.swing.JButton btnUSBDownload;
 	private javax.swing.JButton btnUSBClearList;
 	/**
 	 * Layout components
@@ -142,8 +148,13 @@ public class MainForm extends JFrameActionSender implements
 		wirelessRealTimeDialog.setLocationRelativeTo(refToThis);
 		wirelessBurstDialog = new WirelessBurstDialog(refToThis, false);
 		wirelessBurstDialog.setLocationRelativeTo(refToThis);
-		wirelessInitializeDialog = new WirelessInitializeDialog(refToThis, false);
+		wirelessInitializeDialog = new WirelessInitializeDialog(refToThis,
+				false);
 		wirelessInitializeDialog.setLocationRelativeTo(refToThis);
+
+		// usb dialogs
+		usbDownloadDialog = new USBDownloadDialog(refToThis, false);
+		usbDownloadDialog.setLocationRelativeTo(refToThis);
 
 		// general buttons
 		btnDebugConsole = new javax.swing.JButton();
@@ -189,6 +200,7 @@ public class MainForm extends JFrameActionSender implements
 
 		// USB buttons
 		btnUSBList = new javax.swing.JButton();
+		btnUSBDownload = new javax.swing.JButton();
 		btnUSBClearList = new javax.swing.JButton();
 
 		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -240,7 +252,8 @@ public class MainForm extends JFrameActionSender implements
 		btnWirelessInitializeDialog.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (wirelessInitializeDialog != null) {
-					wirelessInitializeDialog.setDeviceAntId(lastSelectedDeviceAntId);
+					wirelessInitializeDialog
+							.setDeviceAntId(lastSelectedDeviceAntId);
 					wirelessInitializeDialog.setVisible(true);
 				}
 			}
@@ -304,6 +317,16 @@ public class MainForm extends JFrameActionSender implements
 			}
 		});
 
+		btnUSBDownload.setText("Download");
+		btnUSBDownload.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (usbDownloadDialog != null) {
+					usbDownloadDialog.setDeviceSerial(lastSelectedDeviceSerial);
+					usbDownloadDialog.setVisible(true);
+				}
+			}
+		});
+
 		btnUSBClearList.setText("Clear List");
 		btnUSBClearList.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -329,9 +352,17 @@ public class MainForm extends JFrameActionSender implements
 				new javax.swing.event.ListSelectionListener() {
 					public void valueChanged(ListSelectionEvent event) {
 						try {
-							lastSelectedDeviceAntId = tblUSBDevicesModel
-									.getValueAt(tblUSBDevices.getSelectedRow(),
-											0).toString();
+							if (currentTab == Tab.Wireless) {
+								lastSelectedDeviceAntId = tblUSBDevicesModel
+										.getValueAt(
+												tblUSBDevices.getSelectedRow(),
+												0).toString();
+							} else if (currentTab == Tab.USB) {
+								lastSelectedDeviceSerial = tblUSBDevicesModel
+										.getValueAt(
+												tblUSBDevices.getSelectedRow(),
+												0).toString();
+							}
 						} catch (ArrayIndexOutOfBoundsException e) {
 							// TODO why does this happen?
 						}
@@ -401,6 +432,8 @@ public class MainForm extends JFrameActionSender implements
 										.add(pnlLayoutUSB
 												.createSequentialGroup()
 												.add(btnUSBList)
+												.add(18, 18, 18)
+												.add(btnUSBDownload)
 												.addPreferredGap(
 														org.jdesktop.layout.LayoutStyle.RELATED,
 														org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
@@ -417,7 +450,8 @@ public class MainForm extends JFrameActionSender implements
 								.add(pnlLayoutUSB
 										.createParallelGroup(
 												org.jdesktop.layout.GroupLayout.BASELINE)
-										.add(btnUSBList).add(btnUSBClearList))
+										.add(btnUSBList).add(btnUSBDownload)
+										.add(btnUSBClearList))
 								.addPreferredGap(
 										org.jdesktop.layout.LayoutStyle.UNRELATED)
 								.add(scrUSB,
@@ -547,6 +581,9 @@ public class MainForm extends JFrameActionSender implements
 		}
 		if (wirelessBurstDialog != null) {
 			wirelessBurstDialog.addListener(l);
+		}
+		if (usbDownloadDialog != null) {
+			usbDownloadDialog.addListener(l);
 		}
 	}
 

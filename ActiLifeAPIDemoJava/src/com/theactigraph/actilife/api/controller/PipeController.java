@@ -431,6 +431,9 @@ public class PipeController implements IActionSenderListener {
 		case USB_LIST:
 			action.put("action", "usb_list");
 			break;
+		case USB_DOWNLOAD:
+			action.put("action", "usb_download");
+			break;
 		default:
 			return;
 		}
