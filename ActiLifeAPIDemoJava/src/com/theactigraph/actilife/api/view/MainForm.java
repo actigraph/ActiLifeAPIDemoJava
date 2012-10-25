@@ -54,6 +54,7 @@ public class MainForm extends JFrameActionSender implements
 	 * USB dialogs
 	 */
 	private USBDownloadDialog usbDownloadDialog;
+	private USBInitializeDialog usbInitializeDialog;
 	/**
 	 * The last selected device.
 	 */
@@ -80,7 +81,8 @@ public class MainForm extends JFrameActionSender implements
 	 * USB buttons
 	 */
 	private javax.swing.JButton btnUSBList;
-	private javax.swing.JButton btnUSBDownload;
+	private javax.swing.JButton btnUSBDownloadDialog;
+	private javax.swing.JButton btnUSBInitializeDialog;
 	private javax.swing.JButton btnUSBClearList;
 	/**
 	 * Layout components
@@ -155,6 +157,8 @@ public class MainForm extends JFrameActionSender implements
 		// usb dialogs
 		usbDownloadDialog = new USBDownloadDialog(refToThis, false);
 		usbDownloadDialog.setLocationRelativeTo(refToThis);
+		usbInitializeDialog = new USBInitializeDialog(refToThis, false);
+		usbInitializeDialog.setLocationRelativeTo(refToThis);
 
 		// general buttons
 		btnDebugConsole = new javax.swing.JButton();
@@ -200,7 +204,8 @@ public class MainForm extends JFrameActionSender implements
 
 		// USB buttons
 		btnUSBList = new javax.swing.JButton();
-		btnUSBDownload = new javax.swing.JButton();
+		btnUSBDownloadDialog = new javax.swing.JButton();
+		btnUSBInitializeDialog = new javax.swing.JButton();
 		btnUSBClearList = new javax.swing.JButton();
 
 		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -317,12 +322,22 @@ public class MainForm extends JFrameActionSender implements
 			}
 		});
 
-		btnUSBDownload.setText("Download");
-		btnUSBDownload.addActionListener(new ActionListener() {
+		btnUSBDownloadDialog.setText("Download");
+		btnUSBDownloadDialog.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (usbDownloadDialog != null) {
 					usbDownloadDialog.setDeviceSerial(lastSelectedDeviceSerial);
 					usbDownloadDialog.setVisible(true);
+				}
+			}
+		});
+
+		btnUSBInitializeDialog.setText("Initialize");
+		btnUSBInitializeDialog.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (usbInitializeDialog != null) {
+					usbInitializeDialog.setDeviceSerial(lastSelectedDeviceSerial);
+					usbInitializeDialog.setVisible(true);
 				}
 			}
 		});
@@ -433,7 +448,9 @@ public class MainForm extends JFrameActionSender implements
 												.createSequentialGroup()
 												.add(btnUSBList)
 												.add(18, 18, 18)
-												.add(btnUSBDownload)
+												.add(btnUSBInitializeDialog)
+												.add(18, 18, 18)
+												.add(btnUSBDownloadDialog)
 												.addPreferredGap(
 														org.jdesktop.layout.LayoutStyle.RELATED,
 														org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
@@ -450,7 +467,7 @@ public class MainForm extends JFrameActionSender implements
 								.add(pnlLayoutUSB
 										.createParallelGroup(
 												org.jdesktop.layout.GroupLayout.BASELINE)
-										.add(btnUSBList).add(btnUSBDownload)
+										.add(btnUSBList).add(btnUSBInitializeDialog).add(btnUSBDownloadDialog)
 										.add(btnUSBClearList))
 								.addPreferredGap(
 										org.jdesktop.layout.LayoutStyle.UNRELATED)
@@ -584,6 +601,9 @@ public class MainForm extends JFrameActionSender implements
 		}
 		if (usbDownloadDialog != null) {
 			usbDownloadDialog.addListener(l);
+		}
+		if (usbInitializeDialog != null) {
+			usbInitializeDialog.addListener(l);
 		}
 	}
 

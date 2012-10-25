@@ -247,10 +247,16 @@ public class PipeController implements IActionSenderListener {
 						d.setSubject(device.get("device_subject").toString());
 					}
 					if (device.get("device_battery") != null) {
-						d.setBattery(Float.parseFloat(device.get("device_battery").toString()));
+						d.setBattery(Float.parseFloat(device.get(
+								"device_battery").toString()));
 					}
 					onDeviceDiscovered(d);
 				}
+				return;
+			}
+			// usb_initialize
+			if (response.toString().equalsIgnoreCase("usb_initialize")) {
+				onMessageToDisplay("Device intialized");
 				return;
 			}
 		} catch (JsonParseException e) {
@@ -433,6 +439,9 @@ public class PipeController implements IActionSenderListener {
 			break;
 		case USB_DOWNLOAD:
 			action.put("action", "usb_download");
+			break;
+		case USB_INITIALIZE:
+			action.put("action", "usb_initialize");
 			break;
 		default:
 			return;
