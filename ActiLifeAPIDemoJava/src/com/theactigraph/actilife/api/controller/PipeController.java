@@ -259,6 +259,11 @@ public class PipeController implements IActionSenderListener {
 				onMessageToDisplay("Device intialized");
 				return;
 			}
+			// usb_download
+			if (response.toString().equalsIgnoreCase("usb_download")) {
+				onMessageToDisplay("Device downloaded");
+				return;
+			}
 		} catch (JsonParseException e) {
 			onExceptionRaised(e);
 		}
