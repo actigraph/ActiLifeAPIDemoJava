@@ -1,10 +1,9 @@
 package com.theactigraph.actilife.api.view;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 
 import com.google.gson.internal.StringMap;
+import com.theactigraph.actilife.Utils;
 import com.theactigraph.actilife.api.models.Action;
 
 /**
@@ -29,12 +28,6 @@ public class USBInitializeDialog extends JDialogActionSender {
 		super(parent, modal);
 		initComponents();
 	}
-	
-	private Date getDateAddMinutesFromNow(int minutes) {
-		Calendar cal = Calendar.getInstance();
-		cal.add(Calendar.MINUTE, minutes);
-		return cal.getTime();
-	}
 
 	private void initComponents() {
 
@@ -51,7 +44,7 @@ public class USBInitializeDialog extends JDialogActionSender {
 				// init options
 				StringMap initOptions = new StringMap();
 				SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
-				initOptions.put("startdatetime", format.format(getDateAddMinutesFromNow(5)));
+				initOptions.put("startdatetime", format.format(Utils.getDateAddMinutesFromNow(5)));
 				// no stopdatetime
 				initOptions.put("samplerate", "40");
 				initOptions.put("axis", "3");

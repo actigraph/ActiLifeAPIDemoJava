@@ -430,6 +430,9 @@ public class PipeController implements IActionSenderListener {
 		case WIRELESS_DEVICE_IDENTIFY:
 			action.put("action", "wireless_device_identify");
 			break;
+		case WIRELESS_DEVICE_INITIALIZE:
+			action.put("action", "wireless_device_initialize");
+			break;
 		case WIRELESS_DEVICE_REALTIME_START:
 			action.put("action", "wireless_device_realtime_start");
 			break;

@@ -599,6 +599,9 @@ public class MainForm extends JFrameActionSender implements
 		if (wirelessBurstDialog != null) {
 			wirelessBurstDialog.addListener(l);
 		}
+		if (wirelessInitializeDialog != null) {
+			wirelessInitializeDialog.addListener(l);
+		}
 		if (usbDownloadDialog != null) {
 			usbDownloadDialog.addListener(l);
 		}
