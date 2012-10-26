@@ -1,6 +1,7 @@
 package com.theactigraph.actilife.api.view;
 
 import java.io.File;
+import java.util.LinkedList;
 
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
@@ -48,6 +49,10 @@ public class USBDownloadDialog extends JDialogActionSender {
 				int ret = fileopen.showSaveDialog(null);
 				if (ret == JFileChooser.APPROVE_OPTION) {
 					File file = fileopen.getSelectedFile();
+					// output formats
+					LinkedList formats = new LinkedList();
+					formats.add("agd");
+					formats.add("gt3x");
 					// agd options
 					StringMap agdOptions = new StringMap();
 					agdOptions.put("axis", "3");
@@ -71,7 +76,7 @@ public class USBDownloadDialog extends JDialogActionSender {
 					StringMap args = new StringMap();
 					args.put("device_serial", deviceSerial);
 					args.put("file_use_metric_units", "false");
-					args.put("file_format", "agd");
+					args.put("file_format", formats);
 					args.put("file_output_path", file.getPath());
 					args.put("agd_options", agdOptions);
 					args.put("bio_data", bioData);
