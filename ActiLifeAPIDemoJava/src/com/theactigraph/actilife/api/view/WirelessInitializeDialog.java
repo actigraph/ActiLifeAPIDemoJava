@@ -55,8 +55,7 @@ public class WirelessInitializeDialog extends JDialogActionSender {
 				initOptions.put("heartrate", "false");
 				initOptions.put("lux", "true");
 				initOptions.put("disablesleepmode", "true");
-				initOptions.put("antwireless", "true");
-				initOptions.put("antwidatasummaryreless", "true");
+				initOptions.put("datasummary", "true");
 				// bio data
 				StringMap bioData = new StringMap();
 				bioData.put("subjectname", "John Doe");
