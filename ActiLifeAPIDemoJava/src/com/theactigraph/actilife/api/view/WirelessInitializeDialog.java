@@ -72,8 +72,6 @@ public class WirelessInitializeDialog extends JDialogActionSender {
 				// args
 				StringMap args = new StringMap();
 				args.put("device_ant_id", deviceAntId);
-				args.put("file_use_metric_units", "false");
-				args.put("file_format", "agd");
 				args.put("bio_data", bioData);
 				args.put("init_options", initOptions);
 				onActionRequested(Action.WIRELESS_DEVICE_INITIALIZE, args);
