@@ -108,7 +108,7 @@ public class MainForm extends JFrameActionSender implements
 	/**
 	 * Currently viewed tab
 	 */
-	private Tab currentTab;
+	private Tab currentTab = Tab.USB;
 
 	/**
 	 * Application must be started with a reference to a pipe for communicating
@@ -131,8 +131,9 @@ public class MainForm extends JFrameActionSender implements
 			btnWirelessRealTimeDialog.setEnabled(rowSelected);
 			btnWirelessInitializeDialog.setEnabled(rowSelected);
 		} else if (currentTab == Tab.USB) {
-			// TODO: disable functionality buttons when they are added unless a
-			// device record is selected
+			Boolean rowSelected = (tblUSBDevices.getSelectedRow() != -1);
+			btnUSBDownloadDialog.setEnabled(rowSelected);
+			btnUSBInitializeDialog.setEnabled(rowSelected);
 		}
 	}
 
@@ -243,6 +244,7 @@ public class MainForm extends JFrameActionSender implements
 		});
 
 		btnWirelessRealTimeDialog.setText("Real Time");
+		btnWirelessRealTimeDialog.setEnabled(false);
 		btnWirelessRealTimeDialog.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (wirelessRealTimeDialog != null) {
@@ -254,6 +256,7 @@ public class MainForm extends JFrameActionSender implements
 		});
 
 		btnWirelessInitializeDialog.setText("Initialize");
+		btnWirelessInitializeDialog.setEnabled(false);
 		btnWirelessInitializeDialog.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (wirelessInitializeDialog != null) {
@@ -265,6 +268,7 @@ public class MainForm extends JFrameActionSender implements
 		});
 
 		btnWirelessIdentifyDialog.setText("Identify");
+		btnWirelessIdentifyDialog.setEnabled(false);
 		btnWirelessIdentifyDialog.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				StringMap args = new StringMap();
@@ -274,6 +278,7 @@ public class MainForm extends JFrameActionSender implements
 		});
 
 		btnWirelessBurstDialog.setText("Burst");
+		btnWirelessBurstDialog.setEnabled(false);
 		btnWirelessBurstDialog.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (wirelessBurstDialog != null) {
@@ -323,6 +328,7 @@ public class MainForm extends JFrameActionSender implements
 		});
 
 		btnUSBDownloadDialog.setText("Download");
+		btnUSBDownloadDialog.setEnabled(false);
 		btnUSBDownloadDialog.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (usbDownloadDialog != null) {
@@ -333,6 +339,7 @@ public class MainForm extends JFrameActionSender implements
 		});
 
 		btnUSBInitializeDialog.setText("Initialize");
+		btnUSBInitializeDialog.setEnabled(false);
 		btnUSBInitializeDialog.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (usbInitializeDialog != null) {
