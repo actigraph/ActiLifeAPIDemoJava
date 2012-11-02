@@ -220,6 +220,12 @@ public class PipeController implements IActionSenderListener {
 					.equalsIgnoreCase("wireless_device_identify")) {
 				return;
 			}
+			// wireless_device_initialize
+			if (response.toString()
+					.equalsIgnoreCase("wireless_device_initialize")) {
+				onMessageToDisplay("Device intialized");
+				return;
+			}
 			// wireless_device_burst
 			if (response.toString().equalsIgnoreCase("wireless_device_burst")) {
 				if (json.containsKey("payload")) {
