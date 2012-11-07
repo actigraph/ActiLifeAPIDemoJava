@@ -272,8 +272,8 @@ public class MainForm extends JFrameActionSender implements
 		btnWirelessIdentifyDialog.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				StringMap args = new StringMap();
-				args.put("device_ant_id", lastSelectedDeviceAntId);
-				onActionRequested(Action.WIRELESS_DEVICE_IDENTIFY, args);
+				args.put("AntID", lastSelectedDeviceAntId);
+				onActionRequested(Action.WIRELESS_IDENTIFY, args);
 			}
 		});
 
@@ -288,7 +288,7 @@ public class MainForm extends JFrameActionSender implements
 			}
 		});
 
-		btnWirelessScanStart.setText("Start Scan");
+		btnWirelessScanStart.setText("Start");
 		btnWirelessScanStart.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				onActionRequested(Action.WIRELESS_SCAN_START, null);
@@ -296,7 +296,7 @@ public class MainForm extends JFrameActionSender implements
 			}
 		});
 
-		btnWirelessScanStop.setText("Stop Scan");
+		btnWirelessScanStop.setText("Stop");
 		btnWirelessScanStop.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				onActionRequested(Action.WIRELESS_SCAN_STOP, null);

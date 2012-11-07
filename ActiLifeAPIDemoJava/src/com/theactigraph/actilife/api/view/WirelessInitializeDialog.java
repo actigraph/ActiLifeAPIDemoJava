@@ -46,34 +46,34 @@ public class WirelessInitializeDialog extends JDialogActionSender {
 				SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 				initOptions.put("startdatetime", format.format(Utils.getDateAddMinutesFromNow(5)));
 				// no stopdatetime
-				initOptions.put("samplerate", "40");
-				initOptions.put("axis", "3");
-				initOptions.put("steps", "true");
-				initOptions.put("inclinometer", "true");
-				initOptions.put("flashledwhileactive", "false");
-				initOptions.put("flashledindelay", "true");
-				initOptions.put("heartrate", "false");
-				initOptions.put("lux", "true");
-				initOptions.put("disablesleepmode", "true");
-				initOptions.put("datasummary", "true");
+				initOptions.put("SampleRate", "40");
+				initOptions.put("Axis", "3");
+				initOptions.put("Steps", "true");
+				initOptions.put("Inclinometer", "true");
+				initOptions.put("FlashLEDWhileActive", "false");
+				initOptions.put("FlashLEDInDelay", "true");
+				initOptions.put("HeartRate", "false");
+				initOptions.put("Lux", "true");
+				initOptions.put("DisableSleepMode", "true");
+				initOptions.put("DataSummary", "true");
 				// bio data
 				StringMap bioData = new StringMap();
-				bioData.put("subjectname", "John Doe");
-				bioData.put("sex", "Male");
-				bioData.put("height", "182.9"); // cm
-				bioData.put("weight", "175.8"); // lb
-				bioData.put("age", "32");
-				bioData.put("race", "White / Caucasian");
-				bioData.put("dateofbirth", "07/15/1980");
-				bioData.put("limb", "Waist");
-				bioData.put("side", "Right");
-				bioData.put("dominance", "Dominant");
+				bioData.put("SubjectName", "John Doe");
+				bioData.put("Sex", "Male");
+				bioData.put("Height", "182.9"); // cm
+				bioData.put("Weight", "175.8"); // lb
+				bioData.put("Age", "32");
+				bioData.put("Race", "White / Caucasian");
+				bioData.put("DateOfBirth", "07/15/1980");
+				bioData.put("Limb", "Waist");
+				bioData.put("Side", "Right");
+				bioData.put("Dominance", "Dominant");
 				// args
 				StringMap args = new StringMap();
-				args.put("device_ant_id", deviceAntId);
-				args.put("bio_data", bioData);
-				args.put("init_options", initOptions);
-				onActionRequested(Action.WIRELESS_DEVICE_INITIALIZE, args);
+				args.put("AntID", deviceAntId);
+				args.put("BioData", bioData);
+				args.put("InitOptions", initOptions);
+				onActionRequested(Action.WIRELESS_INITIALIZE, args);
 			}
 		});
 

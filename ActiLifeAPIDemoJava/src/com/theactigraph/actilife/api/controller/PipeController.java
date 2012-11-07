@@ -51,7 +51,7 @@ public class PipeController implements IActionSenderListener {
 	 */
 	public PipeController() {
 		startPipeWatcher();
-		gson = new GsonBuilder().setPrettyPrinting().create();
+		gson = new GsonBuilder().create();
 	}
 
 	/**
@@ -118,77 +118,72 @@ public class PipeController implements IActionSenderListener {
 		try {
 
 			StringMap json = (StringMap) gson.fromJson(jsonText, Object.class);
-			Object success = json.get("success");
-			Object response = json.get("response");
-			Object error = json.get("error");
+			Object success = json.get("Success");
+			Object response = json.get("Response");
+			Object error = json.get("Error");
 
 			// required to know if the action was successful or not
 			if (success == null) {
-				onMessageToDisplay("A malformed response was received:\n\nMissing \"success\" element.");
+				onMessageToDisplay("A malformed response was received:\n\nMissing \"Success\" element.");
 				return;
 			}
 			// required to know which action this response is for
 			if (response == null) {
-				onMessageToDisplay("A malformed response was received:\n\nMissing \"response\" element.");
+				onMessageToDisplay("A malformed response was received:\n\nMissing \"Response\" element.");
 				return;
 			}
 			// optionally need to know the error if not successful
 			if (Boolean.parseBoolean(success.toString()) == false) {
 				if (error == null) {
-					onMessageToDisplay("A malformed response was received:\n\nMissing \"error\" element.");
+					onMessageToDisplay("A malformed response was received:\n\nMissing \"Error\" element.");
 				} else {
 					onMessageToDisplay("An error occured processing the "
-							+ json.get("response") + " command:\n\n"
-							+ json.get("error"));
+							+ response + " command:\n\n"
+							+ error);
 				}
 				return;
 			}
-			// actilife_minimize
-			if (response.toString().equalsIgnoreCase("actilife_minimize")) {
+			if (response.toString().equalsIgnoreCase("ActiLifeMinimize")) {
 				return;
 			}
-			// actilife_restore
-			if (response.toString().equalsIgnoreCase("actilife_restore")) {
+			if (response.toString().equalsIgnoreCase("ActiLifeRestore")) {
 				return;
 			}
-			// wireless_scan_start
-			if (response.toString().equalsIgnoreCase("wireless_scan_start")) {
-				if (json.containsKey("payload")) {
-					StringMap device = (StringMap) json.get("payload");
+			if (response.toString().equalsIgnoreCase("WirelessStart")) {
+				if (json.containsKey("Payload")) {
+					StringMap device = (StringMap) json.get("Payload");
 					// build up new device model
 					Device d = new Device();
-					if (device.get("device_ant_id") != null) {
+					if (device.get("AntID") != null) {
 						// integer is coming across as
 						d.setAntId(Integer.toString((int) Float
-								.parseFloat(device.get("device_ant_id")
+								.parseFloat(device.get("AntID")
 										.toString())));
 					}
-					if (device.get("device_serial") != null) {
-						d.setSerial(device.get("device_serial").toString());
+					if (device.get("Serial") != null) {
+						d.setSerial(device.get("Serial").toString());
 					}
-					if (device.get("device_subject") != null) {
-						d.setSubject(device.get("device_subject").toString());
+					if (device.get("Subject") != null) {
+						d.setSubject(device.get("Subject").toString());
 					}
-					if (device.get("device_status") != null) {
-						d.setStatus(device.get("device_status").toString());
+					if (device.get("Status") != null) {
+						d.setStatus(device.get("Status").toString());
 					}
-					if (device.get("device_battery") != null) {
+					if (device.get("Battery") != null) {
 						d.setBattery(Float.parseFloat(device.get(
-								"device_battery").toString()));
+								"Battery").toString()));
 					}
 					onDeviceDiscovered(d);
 				}
 				return;
 			}
-			// wireless_scan_stop
-			if (response.toString().equalsIgnoreCase("wireless_scan_stop")) {
+			if (response.toString().equalsIgnoreCase("WirelessStop")) {
 				return;
 			}
-			// wireless_device_realtime_start
 			if (response.toString().equalsIgnoreCase(
-					"wireless_device_realtime_start")) {
-				if (json.containsKey("payload")) {
-					ArrayList samples = (ArrayList) json.get("payload");
+					"WirelessRealtimeStart")) {
+				if (json.containsKey("Payload")) {
+					ArrayList samples = (ArrayList) json.get("Payload");
 					Iterator samplesIterator = samples.iterator();
 					while (samplesIterator.hasNext()) {
 						StringMap sample = (StringMap) samplesIterator.next();
@@ -196,8 +191,8 @@ public class PipeController implements IActionSenderListener {
 						// build up new sample model
 						RealTimeSample rts = new RealTimeSample();
 						rts.setTime(sample.get("timestamp").toString());
-						if (sample.get("heartrate") != null) {
-							rts.setHr(Float.parseFloat(sample.get("heartrate")
+						if (sample.get("heartRate") != null) {
+							rts.setHr(Float.parseFloat(sample.get("heartRate")
 									.toString()));
 						}
 						rts.setLux(Float.parseFloat(sample.get("lux")
@@ -210,63 +205,61 @@ public class PipeController implements IActionSenderListener {
 				}
 				return;
 			}
-			// wireless_device_realtime_stop
 			if (response.toString().equalsIgnoreCase(
-					"wireless_device_realtime_stop")) {
+					"WirelessRealtimeStop")) {
 				return;
 			}
-			// wireless_scan_stop
 			if (response.toString()
-					.equalsIgnoreCase("wireless_device_identify")) {
+					.equalsIgnoreCase("WirelessIdentify")) {
 				return;
 			}
-			// wireless_device_initialize
 			if (response.toString()
-					.equalsIgnoreCase("wireless_device_initialize")) {
+					.equalsIgnoreCase("WirelessInitialize")) {
 				onMessageToDisplay("Device intialized");
 				return;
 			}
-			// wireless_device_burst
-			if (response.toString().equalsIgnoreCase("wireless_device_burst")) {
-				if (json.containsKey("payload")) {
-					StringMap r = (StringMap) json.get("payload");
-					if (r.containsKey("file_output_path")) {
-						onMessageToDisplay(r.get("file_output_path").toString()
+			if (response.toString()
+					.equalsIgnoreCase("WirelessBurst")) {
+				onMessageToDisplay("Burst completed");
+				return;
+			}
+			if (response.toString().equalsIgnoreCase("WirelessBurst")) {
+				if (json.containsKey("Payload")) {
+					StringMap r = (StringMap) json.get("Payload");
+					if (r.containsKey("FileOutputPath")) {
+						onMessageToDisplay(r.get("FileOutputPath").toString()
 								+ " was successfully downloaded.");
 					}
 				}
 				return;
 			}
-			// usb_list
-			if (response.toString().equalsIgnoreCase("usb_list")) {
-				if (json.containsKey("payload")) {
-					StringMap device = (StringMap) json.get("payload");
+			if (response.toString().equalsIgnoreCase("USBList")) {
+				if (json.containsKey("Payload")) {
+					StringMap device = (StringMap) json.get("Payload");
 					// build up new device model
 					Device d = new Device();
-					if (device.get("device_serial") != null) {
-						d.setSerial(device.get("device_serial").toString());
+					if (device.get("Serial") != null) {
+						d.setSerial(device.get("Serial").toString());
 					}
-					if (device.get("device_status") != null) {
-						d.setStatus(device.get("device_status").toString());
+					if (device.get("Status") != null) {
+						d.setStatus(device.get("Status").toString());
 					}
-					if (device.get("device_subject") != null) {
-						d.setSubject(device.get("device_subject").toString());
+					if (device.get("Subject") != null) {
+						d.setSubject(device.get("Subject").toString());
 					}
-					if (device.get("device_battery") != null) {
+					if (device.get("Battery") != null) {
 						d.setBattery(Float.parseFloat(device.get(
-								"device_battery").toString()));
+								"Battery").toString()));
 					}
 					onDeviceDiscovered(d);
 				}
 				return;
 			}
-			// usb_initialize
-			if (response.toString().equalsIgnoreCase("usb_initialize")) {
+			if (response.toString().equalsIgnoreCase("USBInitialize")) {
 				onMessageToDisplay("Device intialized");
 				return;
 			}
-			// usb_download
-			if (response.toString().equalsIgnoreCase("usb_download")) {
+			if (response.toString().equalsIgnoreCase("USBDownload")) {
 				onMessageToDisplay("Device downloaded");
 				return;
 			}
@@ -418,44 +411,44 @@ public class PipeController implements IActionSenderListener {
 			requestedArgs = o.getArgs();
 		}
 
-		action.put("args", requestedArgs);
+		action.put("Args", requestedArgs);
 
 		switch (o.getAction()) {
 		case ACTILIFE_MINIMIZE:
-			action.put("action", "actilife_minimize");
+			action.put("Action", "ActiLifeMinimize");
 			break;
 		case ACTILIFE_RESTORE:
-			action.put("action", "actilife_restore");
+			action.put("Action", "ActiLifeRestore");
 			break;
 		case WIRELESS_SCAN_START:
-			action.put("action", "wireless_scan_start");
+			action.put("Action", "WirelessStart");
 			break;
 		case WIRELESS_SCAN_STOP:
-			action.put("action", "wireless_scan_stop");
+			action.put("Action", "WirelessStop");
 			break;
-		case WIRELESS_DEVICE_IDENTIFY:
-			action.put("action", "wireless_device_identify");
+		case WIRELESS_IDENTIFY:
+			action.put("Action", "WirelessIdentify");
 			break;
-		case WIRELESS_DEVICE_INITIALIZE:
-			action.put("action", "wireless_device_initialize");
+		case WIRELESS_INITIALIZE:
+			action.put("Action", "WirelessInitialize");
 			break;
-		case WIRELESS_DEVICE_REALTIME_START:
-			action.put("action", "wireless_device_realtime_start");
+		case WIRELESS_REALTIME_START:
+			action.put("Action", "WirelessRealtimeStart");
 			break;
-		case WIRELESS_DEVICE_REALTIME_STOP:
-			action.put("action", "wireless_device_realtime_stop");
+		case WIRELESS_REALTIME_STOP:
+			action.put("Action", "WirelessRealtimeStop");
 			break;
-		case WIRELESS_DEVICE_BURST:
-			action.put("action", "wireless_device_burst");
+		case WIRELESS_BURST:
+			action.put("Action", "WirelessBurst");
 			break;
 		case USB_LIST:
-			action.put("action", "usb_list");
+			action.put("Action", "USBList");
 			break;
 		case USB_DOWNLOAD:
-			action.put("action", "usb_download");
+			action.put("Action", "USBDownload");
 			break;
 		case USB_INITIALIZE:
-			action.put("action", "usb_initialize");
+			action.put("Action", "USBInitialize");
 			break;
 		default:
 			return;

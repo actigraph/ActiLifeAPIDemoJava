@@ -57,8 +57,8 @@ public class WirelessRealTimeDialog extends JDialogActionSender {
 					return;
 				}
 				StringMap args = new StringMap();
-				args.put("device_ant_id", deviceAntId);
-				onActionRequested(Action.WIRELESS_DEVICE_REALTIME_START, args);
+				args.put("AntID", deviceAntId);
+				onActionRequested(Action.WIRELESS_REALTIME_START, args);
 			}
 		});
 
@@ -69,8 +69,8 @@ public class WirelessRealTimeDialog extends JDialogActionSender {
 					return;
 				}
 				StringMap args = new StringMap();
-				args.put("device_ant_id", deviceAntId);
-				onActionRequested(Action.WIRELESS_DEVICE_REALTIME_STOP, args);
+				args.put("AntID", deviceAntId);
+				onActionRequested(Action.WIRELESS_REALTIME_STOP, args);
 			}
 		});
 

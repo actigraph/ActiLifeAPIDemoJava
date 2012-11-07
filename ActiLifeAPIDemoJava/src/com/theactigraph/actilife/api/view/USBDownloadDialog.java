@@ -55,31 +55,31 @@ public class USBDownloadDialog extends JDialogActionSender {
 					formats.add("gt3x");
 					// agd options
 					StringMap agdOptions = new StringMap();
-					agdOptions.put("axis", "3");
-					agdOptions.put("steps", "true");
-					agdOptions.put("lux", "true");
-					agdOptions.put("hr", "true");
-					agdOptions.put("inclonometer", "true");
+					agdOptions.put("Axis", "3");
+					agdOptions.put("Steps", "true");
+					agdOptions.put("Lux", "true");
+					agdOptions.put("HR", "true");
+					agdOptions.put("Inclonometer", "true");
 					// bio data
 					StringMap bioData = new StringMap();
-					bioData.put("subjectname", "John Doe");
-					bioData.put("sex", "Male");
-					bioData.put("height", "182.9"); //cm
-					bioData.put("weight", "175.8"); //lb
-					bioData.put("age", "32");
-					bioData.put("race", "White / Caucasian");
-					bioData.put("dateofbirth", "07/15/1980");
-					bioData.put("limb", "Waist");
-					bioData.put("side", "Right");
-					bioData.put("dominance", "Dominant");
+					bioData.put("SubjectName", "John Doe");
+					bioData.put("Sex", "Male");
+					bioData.put("Height", "182.9"); //cm
+					bioData.put("Weight", "175.8"); //lb
+					bioData.put("Age", "32");
+					bioData.put("Race", "White / Caucasian");
+					bioData.put("DateOfBirth", "07/15/1980");
+					bioData.put("Limb", "Waist");
+					bioData.put("Side", "Right");
+					bioData.put("Dominance", "Dominant");
 					// args
 					StringMap args = new StringMap();
-					args.put("device_serial", deviceSerial);
-					args.put("file_use_metric_units", "false");
-					args.put("file_format", formats);
-					args.put("file_output_path", file.getPath());
-					args.put("agd_options", agdOptions);
-					args.put("bio_data", bioData);
+					args.put("Serial", deviceSerial);
+					args.put("FileUseMetricUnits", "false");
+					args.put("FileFormat", formats);
+					args.put("FileOutputPath", file.getPath());
+					args.put("AGDOptions", agdOptions);
+					args.put("BioData", bioData);
 					onActionRequested(Action.USB_DOWNLOAD, args);
 				}
 			}
