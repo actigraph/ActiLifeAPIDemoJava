@@ -13,4 +13,5 @@ public enum Action {
 	USB_LIST,
 	USB_DOWNLOAD,
 	USB_INITIALIZE,
+	USB_IDENTIFY,
 }

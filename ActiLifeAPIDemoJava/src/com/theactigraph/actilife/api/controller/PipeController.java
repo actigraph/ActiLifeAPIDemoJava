@@ -263,6 +263,10 @@ public class PipeController implements IActionSenderListener {
 				onMessageToDisplay("Device downloaded");
 				return;
 			}
+			if (response.toString().equalsIgnoreCase("USBIdentified")) {
+				onMessageToDisplay("Device identified");
+				return;
+			}
 		} catch (JsonParseException e) {
 			onExceptionRaised(e);
 		}
@@ -449,6 +453,9 @@ public class PipeController implements IActionSenderListener {
 			break;
 		case USB_INITIALIZE:
 			action.put("Action", "USBInitialize");
+			break;
+		case USB_IDENTIFY:
+			action.put("Action", "USBIdentify");
 			break;
 		default:
 			return;

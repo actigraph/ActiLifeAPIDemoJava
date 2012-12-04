@@ -83,6 +83,7 @@ public class MainForm extends JFrameActionSender implements
 	private javax.swing.JButton btnUSBList;
 	private javax.swing.JButton btnUSBDownloadDialog;
 	private javax.swing.JButton btnUSBInitializeDialog;
+	private javax.swing.JButton btnUSBIdentify;
 	private javax.swing.JButton btnUSBClearList;
 	/**
 	 * Layout components
@@ -134,6 +135,7 @@ public class MainForm extends JFrameActionSender implements
 			Boolean rowSelected = (tblUSBDevices.getSelectedRow() != -1);
 			btnUSBDownloadDialog.setEnabled(rowSelected);
 			btnUSBInitializeDialog.setEnabled(rowSelected);
+			btnUSBIdentify.setEnabled(rowSelected);
 		}
 	}
 
@@ -207,6 +209,7 @@ public class MainForm extends JFrameActionSender implements
 		btnUSBList = new javax.swing.JButton();
 		btnUSBDownloadDialog = new javax.swing.JButton();
 		btnUSBInitializeDialog = new javax.swing.JButton();
+		btnUSBIdentify = new javax.swing.JButton();
 		btnUSBClearList = new javax.swing.JButton();
 
 		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -349,6 +352,16 @@ public class MainForm extends JFrameActionSender implements
 			}
 		});
 
+		btnUSBIdentify.setText("Identify");
+		btnUSBIdentify.setEnabled(false);
+		btnUSBIdentify.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				StringMap args = new StringMap();
+				args.put("Serial", lastSelectedDeviceSerial);
+				onActionRequested(Action.USB_IDENTIFY, args);
+			}
+		});
+
 		btnUSBClearList.setText("Clear List");
 		btnUSBClearList.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -455,6 +468,8 @@ public class MainForm extends JFrameActionSender implements
 												.createSequentialGroup()
 												.add(btnUSBList)
 												.add(18, 18, 18)
+												.add(btnUSBIdentify)
+												.add(18, 18, 18)
 												.add(btnUSBInitializeDialog)
 												.add(18, 18, 18)
 												.add(btnUSBDownloadDialog)
@@ -474,7 +489,7 @@ public class MainForm extends JFrameActionSender implements
 								.add(pnlLayoutUSB
 										.createParallelGroup(
 												org.jdesktop.layout.GroupLayout.BASELINE)
-										.add(btnUSBList).add(btnUSBInitializeDialog).add(btnUSBDownloadDialog)
+										.add(btnUSBList).add(btnUSBIdentify).add(btnUSBInitializeDialog).add(btnUSBDownloadDialog)
 										.add(btnUSBClearList))
 								.addPreferredGap(
 										org.jdesktop.layout.LayoutStyle.UNRELATED)
