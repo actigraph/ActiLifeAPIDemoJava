@@ -3,6 +3,7 @@ package com.theactigraph.actilife.api.controller;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Vector;
@@ -11,6 +12,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
 import com.google.gson.internal.StringMap;
+import com.theactigraph.actilife.ISO8601DateParser;
 import com.theactigraph.actilife.api.models.Device;
 import com.theactigraph.actilife.api.models.RealTimeSample;
 import com.theactigraph.actilife.api.models.events.ActionEventObject;
@@ -170,7 +172,7 @@ public class PipeController implements IActionSenderListener {
 						d.setStatus(device.get("Status").toString());
 					}
 					if (device.get("Battery") != null) {
-						d.setBattery(Float.parseFloat(device.get(
+						d.setBatteryVoltage(Float.parseFloat(device.get(
 								"Battery").toString()));
 					}
 					onDeviceDiscovered(d);
@@ -247,10 +249,35 @@ public class PipeController implements IActionSenderListener {
 					if (device.get("Subject") != null) {
 						d.setSubject(device.get("Subject").toString());
 					}
-					if (device.get("Battery") != null) {
-						d.setBattery(Float.parseFloat(device.get(
-								"Battery").toString()));
+					if (device.get("BatteryVoltage") != null) {
+						d.setBatteryVoltage(Float.parseFloat(device.get(
+								"BatteryVoltage").toString()));
 					}
+					if (device.get("BatteryPercentage") != null) {
+						d.setBatteryPercentage(Float.parseFloat(device.get(
+								"BatteryPercentage").toString()));
+					}
+					if (device.get("SampleRate") != null) {
+						d.setSampleRate(Integer.parseInt(device.get(
+								"SampleRate").toString()));
+					}
+					if (device.get("Firmware") != null) {
+						d.setFirmware(device.get("Firmware").toString());
+					}
+					try
+					{
+						if (device.get("StartTime") != null) {
+							d.setStartTime(ISO8601DateParser.parse(device.get(
+									"StartTime").toString()));
+						}
+					} catch (Exception e) {}
+					try
+					{
+						if (device.get("StopTime") != null) {
+							d.setStopTime(ISO8601DateParser.parse(device.get(
+									"StopTime").toString()));
+						}
+					} catch (Exception e) {}
 					onDeviceDiscovered(d);
 				}
 				return;

@@ -43,8 +43,7 @@ public class USBInitializeDialog extends JDialogActionSender {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				// init options
 				StringMap initOptions = new StringMap();
-				SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
-				initOptions.put("StartDateTime", format.format(Utils.getDateAddMinutesFromNow(5)));
+				initOptions.put("startdatetime", Utils.ToISO8601Date(Utils.getDateAddMinutesFromNow(2)));
 				// no stopdatetime
 				initOptions.put("SampleRate", "40");
 				initOptions.put("Axis", "3");
@@ -65,7 +64,7 @@ public class USBInitializeDialog extends JDialogActionSender {
 				bioData.put("Weight", "175.8"); // lb
 				bioData.put("Age", "32");
 				bioData.put("Race", "White / Caucasian");
-				bioData.put("DateOfBirth", "07/15/1980");
+				bioData.put("DateOfBirth", "1980-01-01T13:00:00Z");
 				bioData.put("Limb", "Waist");
 				bioData.put("Side", "Right");
 				bioData.put("Dominance", "Dominant");

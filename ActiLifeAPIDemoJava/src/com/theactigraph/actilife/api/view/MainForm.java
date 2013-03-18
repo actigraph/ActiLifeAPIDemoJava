@@ -375,7 +375,8 @@ public class MainForm extends JFrameActionSender implements
 				new Object[][] {
 
 				}, new String[] { "Serial Number", "Status", "Subject Name",
-						"Battery" }) {
+						"Battery %", "Battery Voltage", "Firmware",
+						"Sample Rate", "Start Time", "Stop Time" }) {
 			boolean[] canEdit = new boolean[] { false, false, false, false };
 
 			public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -410,13 +411,18 @@ public class MainForm extends JFrameActionSender implements
 		tblUSBDevices.getColumnModel().getColumn(1).setResizable(false);
 		tblUSBDevices.getColumnModel().getColumn(2).setResizable(false);
 		tblUSBDevices.getColumnModel().getColumn(3).setResizable(false);
+		tblUSBDevices.getColumnModel().getColumn(4).setResizable(false);
+		tblUSBDevices.getColumnModel().getColumn(5).setResizable(false);
+		tblUSBDevices.getColumnModel().getColumn(6).setResizable(false);
+		tblUSBDevices.getColumnModel().getColumn(7).setResizable(false);
+		tblUSBDevices.getColumnModel().getColumn(8).setResizable(false);
 
 		// wireless devices
 		tblWirelessDevicesModel = new javax.swing.table.DefaultTableModel(
 				new Object[][] {
 
 				}, new String[] { "ANT ID", "Serial Number", "Status",
-						"Subject Name", "Battery" }) {
+						"Subject Name", "Battery %" }) {
 			boolean[] canEdit = new boolean[] { false, false, false, false,
 					false };
 
@@ -676,11 +682,11 @@ public class MainForm extends JFrameActionSender implements
 		}
 
 		Boolean updated = false;
-		float roundedBattery = Utils.round(e.getDevice().getBattery(), 2);
 		Iterator rowIterator = null;
 
 		switch (currentTab) {
 		case USB:
+			//"Serial Number", "Status", "Subject Name", "Battery %", "Battery Voltage", "Firmware", "Sample Rate", "Start Time", "Stop Time"
 			rowIterator = tblUSBDevicesModel.getDataVector().iterator();
 			while (rowIterator.hasNext()) {
 				Vector<String> cols = (Vector<String>) rowIterator.next();
@@ -689,13 +695,26 @@ public class MainForm extends JFrameActionSender implements
 						updated = true;
 						cols.set(1, e.getDevice().getStatus());
 						cols.set(2, e.getDevice().getSubject());
-						cols.set(3, roundedBattery + "v");
+						cols.set(3, Utils.round(e.getDevice().getBatteryPercentage(), 2) + "v");
+						cols.set(4, Utils.round(e.getDevice().getBatteryVoltage(), 2) + "v");
+						cols.set(5, e.getDevice().getFirmware());
+						cols.set(6, String.valueOf(e.getDevice().getSampleRate()));
+						cols.set(7, String.valueOf(e.getDevice().getStartTime()));
+						cols.set(8, String.valueOf(e.getDevice().getStopTime()));
 					}
 			}
 			if (!updated) {
 				tblUSBDevicesModel.addRow(new Object[] {
-						e.getDevice().getSerial(), e.getDevice().getStatus(),
-						e.getDevice().getSubject(), roundedBattery + "v" });
+						e.getDevice().getSerial(),
+						e.getDevice().getStatus(),
+						e.getDevice().getSubject(),
+						Utils.round(e.getDevice().getBatteryPercentage(), 2) + "v",
+						Utils.round(e.getDevice().getBatteryVoltage(), 2) + "v",
+						e.getDevice().getFirmware(),
+						String.valueOf(e.getDevice().getSampleRate()),
+						String.valueOf(e.getDevice().getStartTime()),
+						String.valueOf(e.getDevice().getStopTime())
+				});
 			}
 			tblUSBDevicesModel.fireTableDataChanged();
 			break;
@@ -709,14 +728,16 @@ public class MainForm extends JFrameActionSender implements
 						cols.set(1, e.getDevice().getSerial());
 						cols.set(2, e.getDevice().getStatus());
 						cols.set(3, e.getDevice().getSubject());
-						cols.set(4, roundedBattery + "v");
+						cols.set(4, Utils.round(e.getDevice().getBatteryPercentage(), 2) + "v");
 					}
 			}
 			if (!updated) {
 				tblWirelessDevicesModel.addRow(new Object[] {
-						e.getDevice().getAntId(), e.getDevice().getSerial(),
-						e.getDevice().getStatus(), e.getDevice().getSubject(),
-						roundedBattery + "v" });
+						e.getDevice().getAntId(),
+						e.getDevice().getSerial(),
+						e.getDevice().getStatus(),
+						e.getDevice().getSubject(),
+						Utils.round(e.getDevice().getBatteryPercentage(), 2) + "v" });
 			}
 			tblWirelessDevicesModel.fireTableDataChanged();
 			break;

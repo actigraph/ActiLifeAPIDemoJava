@@ -1,5 +1,7 @@
 package com.theactigraph.actilife;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -13,5 +15,10 @@ public class Utils {
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.MINUTE, minutes);
 		return cal.getTime();
+	}
+	
+	public static String ToISO8601Date(Date d) {
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mmZ");
+		return df.format(d);
 	}
 }
