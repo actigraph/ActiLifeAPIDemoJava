@@ -217,7 +217,7 @@ public class MainForm extends JFrameActionSender implements
 		setResizable(false);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-		btnDebugConsole.setText("Debug Console");
+		btnDebugConsole.setText("Debug");
 		btnDebugConsole.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (debugDialog != null) {
@@ -226,7 +226,7 @@ public class MainForm extends JFrameActionSender implements
 			}
 		});
 
-		btnLaunchActiLife.setText("Launch ActiLife");
+		btnLaunchActiLife.setText("Launch AL");
 		btnLaunchActiLife.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -239,7 +239,7 @@ public class MainForm extends JFrameActionSender implements
 			}
 		});
 
-		btnMinimizeActiLife.setText("Minimize ActiLife");
+		btnMinimizeActiLife.setText("Minimize AL");
 		btnMinimizeActiLife.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				onActionRequested(Action.ACTILIFE_MINIMIZE, null);
@@ -319,7 +319,7 @@ public class MainForm extends JFrameActionSender implements
 			}
 		});
 
-		btnRestoreActiLife.setText("Restore ActiLife");
+		btnRestoreActiLife.setText("Restore");
 		btnRestoreActiLife.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				onActionRequested(Action.ACTILIFE_RESTORE, null);
