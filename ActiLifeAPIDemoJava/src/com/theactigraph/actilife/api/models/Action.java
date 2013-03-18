@@ -3,6 +3,8 @@ package com.theactigraph.actilife.api.models;
 public enum Action {
 	ACTILIFE_MINIMIZE,
 	ACTILIFE_RESTORE,
+	ACTILIFE_VERSION,
+	API_VERSION,
 	WIRELESS_SCAN_START,
 	WIRELESS_SCAN_STOP,
 	WIRELESS_IDENTIFY,

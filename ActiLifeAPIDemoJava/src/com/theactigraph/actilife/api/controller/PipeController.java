@@ -151,6 +151,20 @@ public class PipeController implements IActionSenderListener {
 			if (response.toString().equalsIgnoreCase("ActiLifeRestore")) {
 				return;
 			}
+			if (response.toString().equalsIgnoreCase("ActiLifeVersion")) {
+				if (json.containsKey("Payload")) {
+					StringMap p = (StringMap) json.get("Payload");
+					onMessageToDisplay("ActiLife Version: " + p.get("version"));
+				}
+				return;
+			}
+			if (response.toString().equalsIgnoreCase("APIVersion")) {
+				if (json.containsKey("Payload")) {
+					StringMap p = (StringMap) json.get("Payload");
+					onMessageToDisplay("API Version: " + p.get("version"));
+				}
+				return;
+			}
 			if (response.toString().equalsIgnoreCase("WirelessStart")) {
 				if (json.containsKey("Payload")) {
 					StringMap device = (StringMap) json.get("Payload");
@@ -450,6 +464,12 @@ public class PipeController implements IActionSenderListener {
 			break;
 		case ACTILIFE_RESTORE:
 			action.put("Action", "ActiLifeRestore");
+			break;
+		case ACTILIFE_VERSION:
+			action.put("Action", "ActiLifeVersion");
+			break;
+		case API_VERSION:
+			action.put("Action", "APIVersion");
 			break;
 		case WIRELESS_SCAN_START:
 			action.put("Action", "WirelessStart");

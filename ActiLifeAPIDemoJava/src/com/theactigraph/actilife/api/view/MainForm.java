@@ -67,6 +67,8 @@ public class MainForm extends JFrameActionSender implements
 	private javax.swing.JButton btnLaunchActiLife;
 	private javax.swing.JButton btnMinimizeActiLife;
 	private javax.swing.JButton btnRestoreActiLife;
+	private javax.swing.JButton btnALVersion;
+	private javax.swing.JButton btnAPIVersion;
 	/**
 	 * Wireless buttons
 	 */
@@ -204,6 +206,8 @@ public class MainForm extends JFrameActionSender implements
 		btnWirelessScanStop = new javax.swing.JButton();
 		btnWirelessClearList = new javax.swing.JButton();
 		btnRestoreActiLife = new javax.swing.JButton();
+		btnALVersion = new javax.swing.JButton();
+		btnAPIVersion = new javax.swing.JButton();
 
 		// USB buttons
 		btnUSBList = new javax.swing.JButton();
@@ -243,6 +247,20 @@ public class MainForm extends JFrameActionSender implements
 		btnMinimizeActiLife.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				onActionRequested(Action.ACTILIFE_MINIMIZE, null);
+			}
+		});
+
+		btnALVersion.setText("AL Version");
+		btnALVersion.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				onActionRequested(Action.ACTILIFE_VERSION, null);
+			}
+		});
+
+		btnAPIVersion.setText("API Version");
+		btnAPIVersion.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				onActionRequested(Action.API_VERSION, null);
 			}
 		});
 
@@ -319,7 +337,7 @@ public class MainForm extends JFrameActionSender implements
 			}
 		});
 
-		btnRestoreActiLife.setText("Restore");
+		btnRestoreActiLife.setText("Restore AL");
 		btnRestoreActiLife.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				onActionRequested(Action.ACTILIFE_RESTORE, null);
@@ -349,7 +367,8 @@ public class MainForm extends JFrameActionSender implements
 		btnUSBInitializeDialog.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (usbInitializeDialog != null) {
-					usbInitializeDialog.setDeviceSerial(lastSelectedDeviceSerial);
+					usbInitializeDialog
+							.setDeviceSerial(lastSelectedDeviceSerial);
 					usbInitializeDialog.setVisible(true);
 				}
 			}
@@ -498,7 +517,9 @@ public class MainForm extends JFrameActionSender implements
 								.add(pnlLayoutUSB
 										.createParallelGroup(
 												org.jdesktop.layout.GroupLayout.BASELINE)
-										.add(btnUSBList).add(btnUSBIdentify).add(btnUSBInitializeDialog).add(btnUSBDownloadDialog)
+										.add(btnUSBList).add(btnUSBIdentify)
+										.add(btnUSBInitializeDialog)
+										.add(btnUSBDownloadDialog)
 										.add(btnUSBClearList))
 								.addPreferredGap(
 										org.jdesktop.layout.LayoutStyle.UNRELATED)
@@ -589,7 +610,9 @@ public class MainForm extends JFrameActionSender implements
 										.add(btnLaunchActiLife).add(18, 18, 18)
 										.add(btnMinimizeActiLife)
 										.add(18, 18, 18)
-										.add(btnRestoreActiLife)))
+										.add(btnRestoreActiLife)
+										.add(18, 18, 18).add(btnALVersion)
+										.add(18, 18, 18).add(btnAPIVersion)))
 						.addContainerGap(
 								org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
 								Short.MAX_VALUE)));
@@ -603,7 +626,8 @@ public class MainForm extends JFrameActionSender implements
 										org.jdesktop.layout.GroupLayout.BASELINE)
 								.add(btnDebugConsole).add(btnLaunchActiLife)
 								.add(btnMinimizeActiLife)
-								.add(btnRestoreActiLife))
+								.add(btnRestoreActiLife).add(btnALVersion)
+								.add(btnAPIVersion))
 						.addPreferredGap(
 								org.jdesktop.layout.LayoutStyle.UNRELATED)
 						.add(jTabbedPane1,
@@ -689,7 +713,9 @@ public class MainForm extends JFrameActionSender implements
 
 		switch (currentTab) {
 		case USB:
-			//"Serial Number", "Status", "Subject Name", "Battery %", "Battery Voltage", "Firmware", "Sample Rate", "Start Time", "Stop Time"
+			// "Serial Number", "Status", "Subject Name", "Battery %",
+			// "Battery Voltage", "Firmware", "Sample Rate", "Start Time",
+			// "Stop Time"
 			rowIterator = tblUSBDevicesModel.getDataVector().iterator();
 			while (rowIterator.hasNext()) {
 				Vector<String> cols = (Vector<String>) rowIterator.next();
@@ -698,26 +724,37 @@ public class MainForm extends JFrameActionSender implements
 						updated = true;
 						cols.set(1, e.getDevice().getStatus());
 						cols.set(2, e.getDevice().getSubject());
-						cols.set(3, Utils.round(e.getDevice().getBatteryPercentage(), 2) + "v");
-						cols.set(4, Utils.round(e.getDevice().getBatteryVoltage(), 2) + "v");
+						cols.set(
+								3,
+								Utils.round(e.getDevice()
+										.getBatteryPercentage(), 2)
+										+ "v");
+						cols.set(
+								4,
+								Utils.round(e.getDevice().getBatteryVoltage(),
+										2) + "v");
 						cols.set(5, e.getDevice().getFirmware());
-						cols.set(6, String.valueOf(e.getDevice().getSampleRate()));
-						cols.set(7, String.valueOf(e.getDevice().getStartTime()));
+						cols.set(6,
+								String.valueOf(e.getDevice().getSampleRate()));
+						cols.set(7,
+								String.valueOf(e.getDevice().getStartTime()));
 						cols.set(8, String.valueOf(e.getDevice().getStopTime()));
 					}
 			}
 			if (!updated) {
-				tblUSBDevicesModel.addRow(new Object[] {
-						e.getDevice().getSerial(),
-						e.getDevice().getStatus(),
-						e.getDevice().getSubject(),
-						Utils.round(e.getDevice().getBatteryPercentage(), 2) + "v",
-						Utils.round(e.getDevice().getBatteryVoltage(), 2) + "v",
-						e.getDevice().getFirmware(),
-						String.valueOf(e.getDevice().getSampleRate()),
-						String.valueOf(e.getDevice().getStartTime()),
-						String.valueOf(e.getDevice().getStopTime())
-				});
+				tblUSBDevicesModel
+						.addRow(new Object[] {
+								e.getDevice().getSerial(),
+								e.getDevice().getStatus(),
+								e.getDevice().getSubject(),
+								Utils.round(e.getDevice()
+										.getBatteryPercentage(), 2)
+										+ "v",
+								Utils.round(e.getDevice().getBatteryVoltage(),
+										2) + "v", e.getDevice().getFirmware(),
+								String.valueOf(e.getDevice().getSampleRate()),
+								String.valueOf(e.getDevice().getStartTime()),
+								String.valueOf(e.getDevice().getStopTime()) });
 			}
 			tblUSBDevicesModel.fireTableDataChanged();
 			break;
@@ -731,7 +768,11 @@ public class MainForm extends JFrameActionSender implements
 						cols.set(1, e.getDevice().getSerial());
 						cols.set(2, e.getDevice().getStatus());
 						cols.set(3, e.getDevice().getSubject());
-						cols.set(4, Utils.round(e.getDevice().getBatteryPercentage(), 2) + "v");
+						cols.set(
+								4,
+								Utils.round(e.getDevice()
+										.getBatteryPercentage(), 2)
+										+ "v");
 					}
 			}
 			if (!updated) {
@@ -740,7 +781,8 @@ public class MainForm extends JFrameActionSender implements
 						e.getDevice().getSerial(),
 						e.getDevice().getStatus(),
 						e.getDevice().getSubject(),
-						Utils.round(e.getDevice().getBatteryPercentage(), 2) + "v" });
+						Utils.round(e.getDevice().getBatteryPercentage(), 2)
+								+ "v" });
 			}
 			tblWirelessDevicesModel.fireTableDataChanged();
 			break;
