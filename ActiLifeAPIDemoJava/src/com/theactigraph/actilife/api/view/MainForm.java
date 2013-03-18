@@ -294,6 +294,9 @@ public class MainForm extends JFrameActionSender implements
 		btnWirelessScanStart.setText("Start");
 		btnWirelessScanStart.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				StringMap args = new StringMap();
+				args.put("AntPIN", "0000");
+				onActionRequested(Action.WIRELESS_SCAN_START, args);
 				onActionRequested(Action.WIRELESS_SCAN_START, null);
 				updateUI();
 			}
