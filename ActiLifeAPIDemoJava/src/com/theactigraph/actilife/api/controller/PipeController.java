@@ -272,7 +272,7 @@ public class PipeController implements IActionSenderListener {
 								"BatteryPercentage").toString()));
 					}
 					if (device.get("SampleRate") != null) {
-						d.setSampleRate(Integer.parseInt(device.get(
+						d.setSampleRate(Float.parseFloat(device.get(
 								"SampleRate").toString()));
 					}
 					if (device.get("Firmware") != null) {

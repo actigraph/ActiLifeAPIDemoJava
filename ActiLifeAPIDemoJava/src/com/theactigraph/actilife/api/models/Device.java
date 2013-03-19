@@ -10,7 +10,7 @@ public class Device {
 	private String subject;
 	private float batteryVoltage;
 	private float batteryPercentage;
-	private int sampleRate;
+	private float sampleRate;
 	private String firmware;
 	private Date startTime;
 	private Date stopTime;
@@ -63,11 +63,11 @@ public class Device {
 		this.batteryPercentage = batteryPercentage;
 	}
 
-	public int getSampleRate() {
+	public float getSampleRate() {
 		return sampleRate;
 	}
 
-	public void setSampleRate(int sampleRate) {
+	public void setSampleRate(float sampleRate) {
 		this.sampleRate = sampleRate;
 	}
 
