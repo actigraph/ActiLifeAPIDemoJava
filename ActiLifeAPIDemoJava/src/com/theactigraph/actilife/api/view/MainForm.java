@@ -289,6 +289,7 @@ public class MainForm extends JFrameActionSender implements
 		btnClearList.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				((DeviceTableModel) table.getModel()).clear();
+				updateUI();
 			}
 		});
 
