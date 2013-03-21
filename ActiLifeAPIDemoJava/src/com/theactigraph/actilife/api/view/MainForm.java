@@ -284,6 +284,7 @@ public class MainForm extends JFrameActionSender implements
 		pnlNorth.add(separator_1);
 
 		btnClearList = new JButton("Clear List");
+		btnClearList.setEnabled(false);
 		pnlNorth.add(btnClearList);
 		btnClearList.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -331,7 +332,7 @@ public class MainForm extends JFrameActionSender implements
 								table.getSelectedRow(), 1);
 						if (tmp != null)
 							lastSelectedDeviceAntId = tmp.toString();
-
+						
 						updateUI();
 					}
 				});
@@ -428,6 +429,7 @@ public class MainForm extends JFrameActionSender implements
 			return;
 		}
 		((DeviceTableModel) table.getModel()).addOrUpdateRow(e.getDevice());
+		updateUI();
 	}
 
 	@Override
