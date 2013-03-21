@@ -3,7 +3,6 @@ package com.theactigraph.actilife.api.controller;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Vector;
@@ -12,7 +11,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
 import com.google.gson.internal.StringMap;
-import com.theactigraph.actilife.ISO8601DateParser;
 import com.theactigraph.actilife.api.models.Device;
 import com.theactigraph.actilife.api.models.RealTimeSample;
 import com.theactigraph.actilife.api.models.events.ActionEventObject;
@@ -46,6 +44,8 @@ public class PipeController implements IActionSenderListener {
 	 * JSON Parser
 	 */
 	private Gson gson = null;
+
+	private String lastAction = null;
 
 	/**
 	 * Attempts to connect to ActiLife via a named pipe. Starts watching for
@@ -121,14 +121,17 @@ public class PipeController implements IActionSenderListener {
 		if (jsonText.startsWith("\n"))
 			jsonText = jsonText.replaceFirst("\n", "");
 		
-		//show the response in the debug console
-		onMessageToDebug(" <= " + jsonText + "\n\n");
-		
 		try {
 			StringMap json = (StringMap) gson.fromJson(jsonText, Object.class);
 			Object success = json.get("Success");
 			Object response = json.get("Response");
 			Object error = json.get("Error");
+
+			//show the response in the debug console
+			onMessageToDebug(" <= " + jsonText);
+			if (!response.toString().equalsIgnoreCase(lastAction)) {
+				onMessageToDebug("\n\n");
+			}
 
 			// required to know if the action was successful or not
 			if (success == null) {
@@ -458,56 +461,66 @@ public class PipeController implements IActionSenderListener {
 			requestedArgs = o.getArgs();
 		}
 
+		String actionName = null;
+
 		switch (o.getAction()) {
 		case ACTILIFE_MINIMIZE:
-			action.put("Action", "ActiLifeMinimize");
+			actionName = "ActiLifeMinimize";
 			break;
 		case ACTILIFE_RESTORE:
-			action.put("Action", "ActiLifeRestore");
+			actionName = "ActiLifeRestore";
 			break;
 		case ACTILIFE_VERSION:
-			action.put("Action", "ActiLifeVersion");
+			actionName = "ActiLifeVersion";
 			break;
 		case API_VERSION:
-			action.put("Action", "APIVersion");
+			actionName = "APIVersion";
 			break;
 		case WIRELESS_SCAN_START:
-			action.put("Action", "WirelessStart");
+			actionName = "WirelessStart";
 			break;
 		case WIRELESS_SCAN_STOP:
-			action.put("Action", "WirelessStop");
+			actionName = "WirelessStop";
 			break;
 		case WIRELESS_IDENTIFY:
-			action.put("Action", "WirelessIdentify");
+			actionName = "WirelessIdentify";
 			break;
 		case WIRELESS_INITIALIZE:
-			action.put("Action", "WirelessInitialize");
+			actionName = "WirelessInitialize";
 			break;
 		case WIRELESS_REALTIME_START:
-			action.put("Action", "WirelessRealtimeStart");
+			actionName = "WirelessRealtimeStart";
 			break;
 		case WIRELESS_REALTIME_STOP:
-			action.put("Action", "WirelessRealtimeStop");
+			actionName = "WirelessRealtimeStop";
 			break;
 		case WIRELESS_BURST:
-			action.put("Action", "WirelessBurst");
+			actionName = "WirelessBurst";
 			break;
 		case USB_LIST:
-			action.put("Action", "USBList");
+			actionName = "USBList";
 			break;
 		case USB_DOWNLOAD:
-			action.put("Action", "USBDownload");
+			actionName = "USBDownload";
 			break;
 		case USB_INITIALIZE:
-			action.put("Action", "USBInitialize");
+			actionName = "USBInitialize";
 			break;
 		case USB_IDENTIFY:
-			action.put("Action", "USBIdentify");
+			actionName = "USBIdentify";
 			break;
 		default:
 			return;
 		}
+
+		action.put("Action", actionName);
 		action.put("Args", requestedArgs);
+
+		// for prettier debug output :-/
+		if (lastAction != null && !actionName.toString().equalsIgnoreCase(lastAction)) {
+			onMessageToDebug("\n\n");
+		}
+		lastAction = actionName;
 
 		String actionJSON = gson.toJson(action);
 		onMessageToDebug(" => " + actionJSON);
