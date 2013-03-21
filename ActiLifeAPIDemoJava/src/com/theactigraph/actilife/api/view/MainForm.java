@@ -148,7 +148,6 @@ public class MainForm extends JFrameActionSender implements
 				StringMap args = new StringMap();
 				args.put("AntPIN", txtPIN.getText());
 				onActionRequested(Action.WIRELESS_SCAN_START, args);
-				onActionRequested(Action.WIRELESS_SCAN_START, null);
 				updateUI();
 			}
 		});
