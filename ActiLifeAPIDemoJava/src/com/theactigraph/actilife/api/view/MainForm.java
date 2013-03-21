@@ -30,6 +30,10 @@ import java.awt.FlowLayout;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
+import javax.swing.JSeparator;
+import javax.swing.JTextArea;
+import java.awt.Font;
+import java.awt.Color;
 
 @SuppressWarnings("serial")
 public class MainForm extends JFrameActionSender implements
@@ -54,6 +58,7 @@ public class MainForm extends JFrameActionSender implements
 	private JButton btnRealTime;
 	private JButton btnClearList;
 	private JTextField txtPIN;
+	private JTextArea txtDebug;
 
 	public MainForm() {
 		setTitle("ActiLife API Demo");
@@ -194,12 +199,13 @@ public class MainForm extends JFrameActionSender implements
 		});
 		mnHelp.add(mntmHelpApiVersion);
 
-		JPanel pnlTopButtons = new JPanel();
-		FlowLayout fl_pnlTopButtons = (FlowLayout) pnlTopButtons.getLayout();
-		fl_pnlTopButtons.setAlignment(FlowLayout.LEFT);
-		getContentPane().add(pnlTopButtons, BorderLayout.NORTH);
+		JPanel pnlNorth = new JPanel();
+		FlowLayout fl_pnlNorth = (FlowLayout) pnlNorth.getLayout();
+		fl_pnlNorth.setAlignment(FlowLayout.LEFT);
+		getContentPane().add(pnlNorth, BorderLayout.NORTH);
 
 		btnIdentify = new JButton("Identify");
+		pnlNorth.add(btnIdentify);
 		btnIdentify.setEnabled(false);
 		btnIdentify.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -216,31 +222,33 @@ public class MainForm extends JFrameActionSender implements
 				}
 			}
 		});
-		pnlTopButtons.add(btnIdentify);
 
 		btnInitialize = new JButton("Initialize");
+		pnlNorth.add(btnInitialize);
 		btnInitialize.setEnabled(false);
 		btnInitialize.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (lastSelectedDeviceSerial != null
 						&& lastSelectedDeviceSerial != "") {
 					if (usbInitializeDialog != null) {
-						usbInitializeDialog.setDeviceSerial(lastSelectedDeviceSerial);
+						usbInitializeDialog
+								.setDeviceSerial(lastSelectedDeviceSerial);
 						usbInitializeDialog.setVisible(true);
 					}
 				} else if (lastSelectedDeviceAntId != null
 						&& lastSelectedDeviceAntId != "") {
 					if (wirelessInitializeDialog != null) {
-						wirelessInitializeDialog.setDeviceAntId(lastSelectedDeviceAntId);
+						wirelessInitializeDialog
+								.setDeviceAntId(lastSelectedDeviceAntId);
 						wirelessInitializeDialog.setAntPin(txtPIN.getText());
 						wirelessInitializeDialog.setVisible(true);
 					}
 				}
 			}
 		});
-		pnlTopButtons.add(btnInitialize);
 
 		btnDownload = new JButton("Download");
+		pnlNorth.add(btnDownload);
 		btnDownload.setEnabled(false);
 		btnDownload.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -250,9 +258,9 @@ public class MainForm extends JFrameActionSender implements
 				}
 			}
 		});
-		pnlTopButtons.add(btnDownload);
 
 		btnBurst = new JButton("Burst");
+		pnlNorth.add(btnBurst);
 		btnBurst.setEnabled(false);
 		btnBurst.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -263,20 +271,42 @@ public class MainForm extends JFrameActionSender implements
 				}
 			}
 		});
-		pnlTopButtons.add(btnBurst);
 
 		btnRealTime = new JButton("Real Time");
+		pnlNorth.add(btnRealTime);
 		btnRealTime.setEnabled(false);
 		btnRealTime.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (wirelessRealTimeDialog != null) {
-					wirelessRealTimeDialog.setDeviceAntId(lastSelectedDeviceAntId);
+					wirelessRealTimeDialog
+							.setDeviceAntId(lastSelectedDeviceAntId);
 					wirelessRealTimeDialog.setAntPin(txtPIN.getText());
 					wirelessRealTimeDialog.setVisible(true);
 				}
 			}
 		});
-		pnlTopButtons.add(btnRealTime);
+
+		JSeparator separator = new JSeparator();
+		pnlNorth.add(separator);
+
+		JLabel lblPIN = new JLabel("Ant PIN");
+		pnlNorth.add(lblPIN);
+
+		txtPIN = new JTextField();
+		pnlNorth.add(txtPIN);
+		txtPIN.setText("0000");
+		txtPIN.setColumns(4);
+
+		JSeparator separator_1 = new JSeparator();
+		pnlNorth.add(separator_1);
+
+		btnClearList = new JButton("Clear List");
+		pnlNorth.add(btnClearList);
+		btnClearList.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				((DeviceTableModel) table.getModel()).clear();
+			}
+		});
 
 		JScrollPane scrollPane = new JScrollPane();
 		getContentPane().add(scrollPane, BorderLayout.CENTER);
@@ -285,6 +315,15 @@ public class MainForm extends JFrameActionSender implements
 		scrollPane.setViewportView(table);
 		table.setFillsViewportHeight(true);
 		table.setModel(new DeviceTableModel());
+
+		JScrollPane scrollPane_1 = new JScrollPane();
+		getContentPane().add(scrollPane_1, BorderLayout.SOUTH);
+
+		txtDebug = new JTextArea();
+		txtDebug.setRows(10);
+		txtDebug.setForeground(Color.GRAY);
+		txtDebug.setFont(new Font("Courier New", Font.PLAIN, 12));
+		scrollPane_1.setViewportView(txtDebug);
 		table.getColumnModel().getColumn(2).setPreferredWidth(109);
 		table.getColumnModel().getColumn(3).setPreferredWidth(133);
 		table.getColumnModel().getColumn(4).setPreferredWidth(177);
@@ -313,27 +352,6 @@ public class MainForm extends JFrameActionSender implements
 						updateUI();
 					}
 				});
-
-		JPanel panel = new JPanel();
-		FlowLayout flowLayout = (FlowLayout) panel.getLayout();
-		flowLayout.setAlignment(FlowLayout.RIGHT);
-		getContentPane().add(panel, BorderLayout.SOUTH);
-
-		btnClearList = new JButton("Clear List");
-		btnClearList.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				((DeviceTableModel) table.getModel()).clear();
-			}
-		});
-
-		JLabel lblPIN = new JLabel("Ant PIN");
-		panel.add(lblPIN);
-
-		txtPIN = new JTextField();
-		txtPIN.setText("0000");
-		panel.add(txtPIN);
-		txtPIN.setColumns(4);
-		panel.add(btnClearList);
 	}
 
 	private void updateUI() {
@@ -406,6 +424,12 @@ public class MainForm extends JFrameActionSender implements
 		if (!o.getMessage().endsWith("\n")) {
 			debugDialog.appendText("\n");
 		}
+
+		txtDebug.append(o.getMessage());
+		if (!o.getMessage().endsWith("\n")) {
+			txtDebug.append("\n");
+		}
+		txtDebug.setCaretPosition(txtDebug.getDocument().getLength());
 	}
 
 	/**
