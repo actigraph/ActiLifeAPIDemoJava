@@ -205,7 +205,6 @@ public class PipeController implements IActionSenderListener {
 			}
 			if (response.toString().equalsIgnoreCase("WirelessRealtimeStart")) {
 				if (json.containsKey("Payload")) {
-					onMessageToDisplay(json.get("Payload").toString());
 					ArrayList samples = (ArrayList) json.get("Payload");
 					Iterator samplesIterator = samples.iterator();
 					while (samplesIterator.hasNext()) {
