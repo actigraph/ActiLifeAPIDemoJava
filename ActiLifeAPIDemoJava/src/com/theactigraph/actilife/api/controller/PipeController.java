@@ -116,8 +116,14 @@ public class PipeController implements IActionSenderListener {
 		if (jsonText == null) {
 			return;
 		}
-		// show the response in the debug console
-		onMessageToDebug(" <= " + jsonText);
+		
+		//for cleaner debug output
+		if (jsonText.startsWith("\n"))
+			jsonText = jsonText.replaceFirst("\n", "");
+		
+		//show the response in the debug console
+		onMessageToDebug(" <= " + jsonText + "\n\n");
+		
 		try {
 			StringMap json = (StringMap) gson.fromJson(jsonText, Object.class);
 			Object success = json.get("Success");
