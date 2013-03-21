@@ -116,6 +116,8 @@ public class PipeController implements IActionSenderListener {
 		if (jsonText == null) {
 			return;
 		}
+		// show the response in the debug console
+		onMessageToDebug(" <= " + jsonText);
 		try {
 			StringMap json = (StringMap) gson.fromJson(jsonText, Object.class);
 			Object success = json.get("Success");
@@ -138,12 +140,11 @@ public class PipeController implements IActionSenderListener {
 					onMessageToDisplay("A malformed response was received:\n\nMissing \"Error\" element.");
 				} else {
 					onMessageToDisplay("An error occured processing the "
-							+ response + " command:\n\n"
-							+ error);
+							+ response + " command:\n\n" + error);
 				}
 				return;
 			}
-			
+
 			if (response.toString().equalsIgnoreCase("ActiLifeMinimize")) {
 				return;
 			}
@@ -172,8 +173,7 @@ public class PipeController implements IActionSenderListener {
 					if (device.get("AntID") != null) {
 						// integer is coming across as
 						d.setAntId(Integer.toString((int) Float
-								.parseFloat(device.get("AntID")
-										.toString())));
+								.parseFloat(device.get("AntID").toString())));
 					}
 					if (device.get("Serial") != null) {
 						d.setSerial(device.get("Serial").toString());
@@ -194,8 +194,7 @@ public class PipeController implements IActionSenderListener {
 			if (response.toString().equalsIgnoreCase("WirelessStop")) {
 				return;
 			}
-			if (response.toString().equalsIgnoreCase(
-					"WirelessRealtimeStart")) {
+			if (response.toString().equalsIgnoreCase("WirelessRealtimeStart")) {
 				if (json.containsKey("Payload")) {
 					onMessageToDisplay(json.get("Payload").toString());
 					ArrayList samples = (ArrayList) json.get("Payload");
@@ -220,21 +219,17 @@ public class PipeController implements IActionSenderListener {
 				}
 				return;
 			}
-			if (response.toString().equalsIgnoreCase(
-					"WirelessRealtimeStop")) {
+			if (response.toString().equalsIgnoreCase("WirelessRealtimeStop")) {
 				return;
 			}
-			if (response.toString()
-					.equalsIgnoreCase("WirelessIdentify")) {
+			if (response.toString().equalsIgnoreCase("WirelessIdentify")) {
 				return;
 			}
-			if (response.toString()
-					.equalsIgnoreCase("WirelessInitialize")) {
+			if (response.toString().equalsIgnoreCase("WirelessInitialize")) {
 				onMessageToDisplay("Device intialized");
 				return;
 			}
-			if (response.toString()
-					.equalsIgnoreCase("WirelessBurst")) {
+			if (response.toString().equalsIgnoreCase("WirelessBurst")) {
 				onMessageToDisplay("Burst completed");
 				return;
 			}
@@ -266,32 +261,33 @@ public class PipeController implements IActionSenderListener {
 						d.setSubject(device.get("Subject").toString());
 					}
 					if (device.get("BatteryVoltage") != null) {
-						d.setBatteryVoltage(device.get(
-								"BatteryVoltage").toString());
+						d.setBatteryVoltage(device.get("BatteryVoltage")
+								.toString());
 					}
 					if (device.get("BatteryPercent") != null) {
-						d.setBatteryPercentage(device.get(
-								"BatteryPercent").toString());
+						d.setBatteryPercentage(device.get("BatteryPercent")
+								.toString());
 					}
 					if (device.get("SampleRate") != null) {
-						d.setSampleRate(device.get(
-								"SampleRate").toString());
+						d.setSampleRate(device.get("SampleRate").toString());
 					}
 					if (device.get("Firmware") != null) {
 						d.setFirmware(device.get("Firmware").toString());
 					}
-					try
-					{
+					try {
 						if (device.get("StartTime") != null) {
 							d.setStartTime(device.get("StartTime").toString());
 						}
-					} catch (Exception e) {}
-					try
-					{
-						if (device.get("StopTime") != null && !device.get("StopTime").toString().equals("0001-01-01T00:00:00Z")) {
+					} catch (Exception e) {
+					}
+					try {
+						if (device.get("StopTime") != null
+								&& !device.get("StopTime").toString()
+										.equals("0001-01-01T00:00:00Z")) {
 							d.setStopTime(device.get("StopTime").toString());
 						}
-					} catch (Exception e) {}
+					} catch (Exception e) {
+					}
 					onDeviceDiscovered(d);
 				}
 				return;
@@ -456,8 +452,6 @@ public class PipeController implements IActionSenderListener {
 			requestedArgs = o.getArgs();
 		}
 
-		action.put("Args", requestedArgs);
-
 		switch (o.getAction()) {
 		case ACTILIFE_MINIMIZE:
 			action.put("Action", "ActiLifeMinimize");
@@ -507,9 +501,10 @@ public class PipeController implements IActionSenderListener {
 		default:
 			return;
 		}
+		action.put("Args", requestedArgs);
 
 		String actionJSON = gson.toJson(action);
-		onMessageToDebug(actionJSON);
+		onMessageToDebug(" => " + actionJSON);
 		try {
 			synchronized (pipeLock) {
 				pipe.write(actionJSON.getBytes());
