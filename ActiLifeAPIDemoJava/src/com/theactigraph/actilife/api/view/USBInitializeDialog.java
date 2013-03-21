@@ -3,6 +3,7 @@ package com.theactigraph.actilife.api.view;
 import java.text.SimpleDateFormat;
 
 import com.google.gson.internal.StringMap;
+import com.theactigraph.actilife.ISO8601DateParser;
 import com.theactigraph.actilife.Utils;
 import com.theactigraph.actilife.api.models.Action;
 
@@ -43,7 +44,7 @@ public class USBInitializeDialog extends JDialogActionSender {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				// init options
 				StringMap initOptions = new StringMap();
-				initOptions.put("startdatetime", Utils.ToISO8601Date(Utils.getDateAddMinutesFromNow(2)));
+				initOptions.put("startdatetime", ISO8601DateParser.toString(Utils.getDateAddMinutesFromNow(2)));
 				// no stopdatetime
 				initOptions.put("SampleRate", "40");
 				initOptions.put("Axis", "3");

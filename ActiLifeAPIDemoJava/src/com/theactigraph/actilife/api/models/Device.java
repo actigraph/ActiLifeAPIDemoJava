@@ -1,19 +1,17 @@
 package com.theactigraph.actilife.api.models;
 
-import java.util.Date;
-
 public class Device {
-	private String antId;
-	private String serial;
-	private String type;
-	private String status;
-	private String subject;
-	private float batteryVoltage;
-	private float batteryPercentage;
-	private float sampleRate;
-	private String firmware;
-	private Date startTime;
-	private Date stopTime;
+	private String antId = "";
+	private String serial = "";
+	private String type = "";
+	private String status = "";
+	private String subject = "";
+	private String batteryVoltage = "";
+	private String batteryPercentage = "";
+	private String sampleRate = "";
+	private String firmware = "";
+	private String startTime = "";
+	private String stopTime = "";
 
 	public String getSerial() {
 		return serial;
@@ -47,27 +45,27 @@ public class Device {
 		this.subject = subject;
 	}
 
-	public float getBatteryVoltage() {
+	public String getBatteryVoltage() {
 		return batteryVoltage;
 	}
 
-	public void setBatteryVoltage(float batteryVoltage) {
+	public void setBatteryVoltage(String batteryVoltage) {
 		this.batteryVoltage = batteryVoltage;
 	}
 
-	public float getBatteryPercentage() {
+	public String getBatteryPercentage() {
 		return batteryPercentage;
 	}
 
-	public void setBatteryPercentage(float batteryPercentage) {
+	public void setBatteryPercentage(String batteryPercentage) {
 		this.batteryPercentage = batteryPercentage;
 	}
 
-	public float getSampleRate() {
+	public String getSampleRate() {
 		return sampleRate;
 	}
 
-	public void setSampleRate(float sampleRate) {
+	public void setSampleRate(String sampleRate) {
 		this.sampleRate = sampleRate;
 	}
 
@@ -79,19 +77,19 @@ public class Device {
 		this.firmware = firmware;
 	}
 
-	public Date getStartTime() {
+	public String getStartTime() {
 		return startTime;
 	}
 
-	public void setStartTime(Date startTime) {
+	public void setStartTime(String startTime) {
 		this.startTime = startTime;
 	}
 
-	public Date getStopTime() {
+	public String getStopTime() {
 		return stopTime;
 	}
 
-	public void setStopTime(Date stopTime) {
+	public void setStopTime(String stopTime) {
 		this.stopTime = stopTime;
 	}
 

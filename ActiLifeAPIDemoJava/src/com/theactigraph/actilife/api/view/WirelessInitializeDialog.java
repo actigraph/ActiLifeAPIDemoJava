@@ -1,8 +1,7 @@
 package com.theactigraph.actilife.api.view;
 
-import java.text.SimpleDateFormat;
-
 import com.google.gson.internal.StringMap;
+import com.theactigraph.actilife.ISO8601DateParser;
 import com.theactigraph.actilife.Utils;
 import com.theactigraph.actilife.api.models.Action;
 
@@ -12,18 +11,11 @@ import com.theactigraph.actilife.api.models.Action;
  * @author jeremy.moore
  */
 @SuppressWarnings("serial")
-public class WirelessInitializeDialog extends JDialogActionSender {
-	/**
-	 * Device being operated on.
-	 */
-	private String deviceAntId;
+public class WirelessInitializeDialog extends WirelessJDialogActionSender {
 
 	private javax.swing.JButton jButton1;
 	private javax.swing.JLabel jLabel1;
-
-	/**
-	 * Creates new form InitializeDialog
-	 */
+	
 	public WirelessInitializeDialog(java.awt.Frame parent, boolean modal) {
 		super(parent, modal);
 		initComponents();
@@ -43,7 +35,7 @@ public class WirelessInitializeDialog extends JDialogActionSender {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				// init options
 				StringMap initOptions = new StringMap();
-				initOptions.put("startdatetime", Utils.ToISO8601Date(Utils.getDateAddMinutesFromNow(2)));
+				initOptions.put("startdatetime", ISO8601DateParser.toString(Utils.getDateAddMinutesFromNow(2)));
 				// no stopdatetime
 				initOptions.put("SampleRate", "40");
 				initOptions.put("Axis", "3");
@@ -70,6 +62,7 @@ public class WirelessInitializeDialog extends JDialogActionSender {
 				// args
 				StringMap args = new StringMap();
 				args.put("AntID", deviceAntId);
+				args.put("AntPIN", antPin);
 				args.put("BioData", bioData);
 				args.put("InitOptions", initOptions);
 				onActionRequested(Action.WIRELESS_INITIALIZE, args);
@@ -108,16 +101,5 @@ public class WirelessInitializeDialog extends JDialogActionSender {
 										Short.MAX_VALUE)));
 
 		pack();
-	}
-
-	/**
-	 * Informs this dialog of which device we are talking to.
-	 * 
-	 * @param deviceAntId
-	 */
-	public void setDeviceAntId(String deviceAntId) {
-		if (this.deviceAntId != deviceAntId) {
-			this.deviceAntId = deviceAntId;
-		}
 	}
 }

@@ -12,16 +12,12 @@ import com.theactigraph.actilife.api.models.Action;
  * @author jeremy.moore
  */
 @SuppressWarnings("serial")
-public class WirelessRealTimeDialog extends JDialogActionSender {
+public class WirelessRealTimeDialog extends WirelessJDialogActionSender {
 
 	/**
 	 * Model for device table. Allows for adding records on demand.
 	 */
 	private DefaultTableModel tblRealTimeDataModel = new DefaultTableModel();
-	/**
-	 * Device being operated on.
-	 */
-	private String deviceAntId;
 
 	private javax.swing.JButton btnClear;
 	private javax.swing.JButton btnStart;
@@ -29,12 +25,8 @@ public class WirelessRealTimeDialog extends JDialogActionSender {
 	private javax.swing.JScrollPane jScrollPane2;
 	private javax.swing.JTable tblRealTimeData;
 
-	/**
-	 * Creates new form RealTimeDialog
-	 */
 	public WirelessRealTimeDialog(java.awt.Frame parent, boolean modal) {
 		super(parent, modal);
-
 		initComponents();
 	}
 
@@ -58,6 +50,7 @@ public class WirelessRealTimeDialog extends JDialogActionSender {
 				}
 				StringMap args = new StringMap();
 				args.put("AntID", deviceAntId);
+				args.put("AntPIN", antPin);
 				onActionRequested(Action.WIRELESS_REALTIME_START, args);
 			}
 		});
@@ -168,6 +161,7 @@ public class WirelessRealTimeDialog extends JDialogActionSender {
 	 * 
 	 * @param deviceAntId
 	 */
+	@Override
 	public void setDeviceAntId(String deviceAntId) {
 		if (this.deviceAntId != deviceAntId) {
 			tblRealTimeData.removeAll();

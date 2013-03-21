@@ -116,9 +116,7 @@ public class PipeController implements IActionSenderListener {
 		if (jsonText == null) {
 			return;
 		}
-		onMessageToDebug(jsonText);
 		try {
-
 			StringMap json = (StringMap) gson.fromJson(jsonText, Object.class);
 			Object success = json.get("Success");
 			Object response = json.get("Response");
@@ -145,6 +143,7 @@ public class PipeController implements IActionSenderListener {
 				}
 				return;
 			}
+			
 			if (response.toString().equalsIgnoreCase("ActiLifeMinimize")) {
 				return;
 			}
@@ -186,8 +185,7 @@ public class PipeController implements IActionSenderListener {
 						d.setStatus(device.get("Status").toString());
 					}
 					if (device.get("Battery") != null) {
-						d.setBatteryVoltage(Float.parseFloat(device.get(
-								"Battery").toString()));
+						d.setBatteryVoltage(device.get("Battery").toString());
 					}
 					onDeviceDiscovered(d);
 				}
@@ -199,6 +197,7 @@ public class PipeController implements IActionSenderListener {
 			if (response.toString().equalsIgnoreCase(
 					"WirelessRealtimeStart")) {
 				if (json.containsKey("Payload")) {
+					onMessageToDisplay(json.get("Payload").toString());
 					ArrayList samples = (ArrayList) json.get("Payload");
 					Iterator samplesIterator = samples.iterator();
 					while (samplesIterator.hasNext()) {
@@ -257,6 +256,9 @@ public class PipeController implements IActionSenderListener {
 					if (device.get("Serial") != null) {
 						d.setSerial(device.get("Serial").toString());
 					}
+					if (device.get("AntID") != null) {
+						d.setAntId(device.get("AntID").toString());
+					}
 					if (device.get("Status") != null) {
 						d.setStatus(device.get("Status").toString());
 					}
@@ -264,16 +266,16 @@ public class PipeController implements IActionSenderListener {
 						d.setSubject(device.get("Subject").toString());
 					}
 					if (device.get("BatteryVoltage") != null) {
-						d.setBatteryVoltage(Float.parseFloat(device.get(
-								"BatteryVoltage").toString()));
+						d.setBatteryVoltage(device.get(
+								"BatteryVoltage").toString());
 					}
-					if (device.get("BatteryPercentage") != null) {
-						d.setBatteryPercentage(Float.parseFloat(device.get(
-								"BatteryPercentage").toString()));
+					if (device.get("BatteryPercent") != null) {
+						d.setBatteryPercentage(device.get(
+								"BatteryPercent").toString());
 					}
 					if (device.get("SampleRate") != null) {
-						d.setSampleRate(Float.parseFloat(device.get(
-								"SampleRate").toString()));
+						d.setSampleRate(device.get(
+								"SampleRate").toString());
 					}
 					if (device.get("Firmware") != null) {
 						d.setFirmware(device.get("Firmware").toString());
@@ -281,15 +283,13 @@ public class PipeController implements IActionSenderListener {
 					try
 					{
 						if (device.get("StartTime") != null) {
-							d.setStartTime(ISO8601DateParser.parse(device.get(
-									"StartTime").toString()));
+							d.setStartTime(device.get("StartTime").toString());
 						}
 					} catch (Exception e) {}
 					try
 					{
-						if (device.get("StopTime") != null) {
-							d.setStopTime(ISO8601DateParser.parse(device.get(
-									"StopTime").toString()));
+						if (device.get("StopTime") != null && !device.get("StopTime").toString().equals("0001-01-01T00:00:00Z")) {
+							d.setStopTime(device.get("StopTime").toString());
 						}
 					} catch (Exception e) {}
 					onDeviceDiscovered(d);

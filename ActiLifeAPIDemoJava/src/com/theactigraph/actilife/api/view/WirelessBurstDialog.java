@@ -15,19 +15,12 @@ import com.theactigraph.actilife.api.models.Action;
  * @author jeremy.moore
  */
 @SuppressWarnings("serial")
-public class WirelessBurstDialog extends JDialogActionSender {
-	/**
-	 * Device being operated on.
-	 */
-	private String deviceAntId;
-
+public class WirelessBurstDialog extends WirelessJDialogActionSender {
+	
 	private javax.swing.JButton btnBurst;
 	private javax.swing.JLabel jLabel1;
 	private javax.swing.JSpinner spnMinutes;
 
-	/**
-	 * Creates new form NewJDialog
-	 */
 	public WirelessBurstDialog(java.awt.Frame parent, boolean modal) {
 		super(parent, modal);
 		initComponents();
@@ -54,6 +47,7 @@ public class WirelessBurstDialog extends JDialogActionSender {
 					File file = fileopen.getSelectedFile();
 					StringMap args = new StringMap();
 					args.put("AntID", deviceAntId);
+					args.put("AntPIN", antPin);
 					args.put("Minutes", spnMinutes.getValue().toString());
 					args.put("FileUseMetricUnits", "false");
 					args.put("FileFormat", "agd");
@@ -94,18 +88,5 @@ public class WirelessBurstDialog extends JDialogActionSender {
         );
 
         pack();
-	}
-
-
-	/**
-	 * Informs this dialog of which device we are doing a burst download for.
-	 * If a new device is set, we should clear the text area.
-	 * 
-	 * @param deviceAntId
-	 */
-	public void setDeviceAntId(String deviceAntId) {
-		if (this.deviceAntId != deviceAntId) {
-			this.deviceAntId = deviceAntId;
-		}
 	}
 }
