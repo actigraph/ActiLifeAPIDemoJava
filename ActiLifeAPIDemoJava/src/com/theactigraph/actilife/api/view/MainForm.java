@@ -40,7 +40,6 @@ public class MainForm extends JFrameActionSender implements
 		IResponseHandlerListener {
 
 	private JTable table;
-	private DebugDialog debugDialog;
 	private WirelessRealTimeDialog wirelessRealTimeDialog;
 	private WirelessBurstDialog wirelessBurstDialog;
 	private WirelessInitializeDialog wirelessInitializeDialog;
@@ -82,9 +81,6 @@ public class MainForm extends JFrameActionSender implements
 
 		usbInitializeDialog = new USBInitializeDialog(refToThis, false);
 		usbInitializeDialog.setLocationRelativeTo(refToThis);
-
-		debugDialog = new DebugDialog(refToThis, false);
-		debugDialog.setLocationRelativeTo(refToThis);
 
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -166,19 +162,6 @@ public class MainForm extends JFrameActionSender implements
 			}
 		});
 		mnWireless.add(mntmWirelessStop);
-
-		JMenu mnTools = new JMenu("Tools");
-		menuBar.add(mnTools);
-
-		JMenuItem mntmToolsDebugConsole = new JMenuItem("Debug Console");
-		mntmToolsDebugConsole.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (debugDialog != null) {
-					debugDialog.setVisible(!debugDialog.isShowing());
-				}
-			}
-		});
-		mnTools.add(mntmToolsDebugConsole);
 
 		JMenu mnHelp = new JMenu("Help");
 		menuBar.add(mnHelp);
@@ -417,14 +400,6 @@ public class MainForm extends JFrameActionSender implements
 	 */
 	@Override
 	public void messageToDebug(MessageEventObject o) {
-		if (debugDialog == null || o == null || o.getMessage() == null) {
-			return;
-		}
-		debugDialog.appendText(o.getMessage());
-		if (!o.getMessage().endsWith("\n")) {
-			debugDialog.appendText("\n");
-		}
-
 		txtDebug.append(o.getMessage());
 		if (!o.getMessage().endsWith("\n")) {
 			txtDebug.append("\n");
