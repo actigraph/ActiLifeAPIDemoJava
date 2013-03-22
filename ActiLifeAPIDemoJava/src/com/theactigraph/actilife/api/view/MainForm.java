@@ -193,15 +193,15 @@ public class MainForm extends JFrameActionSender implements
 		btnIdentify.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				StringMap args = new StringMap();
-				if (lastSelectedDeviceSerial != null
-						&& lastSelectedDeviceSerial != "") {
-					args.put("Serial", lastSelectedDeviceSerial);
-					onActionRequested(Action.USB_IDENTIFY, args);
-				} else if (lastSelectedDeviceAntId != null
+				if (lastSelectedDeviceAntId != null
 						&& lastSelectedDeviceAntId != "") {
 					args.put("AntID", lastSelectedDeviceAntId);
 					args.put("AntPIN", txtPIN.getText());
 					onActionRequested(Action.WIRELESS_IDENTIFY, args);
+				} else if (lastSelectedDeviceSerial != null
+						&& lastSelectedDeviceSerial != "") {
+					args.put("Serial", lastSelectedDeviceSerial);
+					onActionRequested(Action.USB_IDENTIFY, args);
 				}
 			}
 		});
