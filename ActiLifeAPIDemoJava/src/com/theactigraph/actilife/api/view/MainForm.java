@@ -188,6 +188,9 @@ public class MainForm extends JFrameActionSender implements
 		FlowLayout fl_pnlNorth = (FlowLayout) pnlNorth.getLayout();
 		fl_pnlNorth.setAlignment(FlowLayout.LEFT);
 		getContentPane().add(pnlNorth, BorderLayout.NORTH);
+		
+		JLabel lblUsb = new JLabel("USB");
+		pnlNorth.add(lblUsb);
 
 		btnIdentify = new JButton("Identify");
 		pnlNorth.add(btnIdentify);
@@ -237,6 +240,9 @@ public class MainForm extends JFrameActionSender implements
 				onActionRequested(Action.WIRELESS_IDENTIFY, args);
 			}
 		});
+		
+		JLabel lblWireless = new JLabel("Wireless");
+		pnlNorth.add(lblWireless);
 		pnlNorth.add(btnWirelessIdentify);
 
 		btnWirelessInitialize = new JButton("Initialize");
@@ -316,7 +322,7 @@ public class MainForm extends JFrameActionSender implements
 		getContentPane().add(scrollPane_1, BorderLayout.SOUTH);
 
 		txtDebug = new JTextArea();
-		txtDebug.setRows(10);
+		txtDebug.setRows(15);
 		txtDebug.setForeground(Color.GRAY);
 		txtDebug.setFont(new Font("Courier New", Font.PLAIN, 12));
 		scrollPane_1.setViewportView(txtDebug);
