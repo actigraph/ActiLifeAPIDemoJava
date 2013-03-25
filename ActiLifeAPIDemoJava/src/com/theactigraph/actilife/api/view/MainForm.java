@@ -51,10 +51,12 @@ public class MainForm extends JFrameActionSender implements
 	private String lastSelectedDeviceSerial;
 
 	private JButton btnInitialize;
-	private JButton btnBurst;
+	private JButton btnWirelessBurst;
+	private JButton btnWirelessInitialize;
+	private JButton btnWirelessIdentify;
 	private JButton btnIdentify;
 	private JButton btnDownload;
-	private JButton btnRealTime;
+	private JButton btnWirelessRealTime;
 	private JButton btnClearList;
 	private JTextField txtPIN;
 	private JTextArea txtDebug;
@@ -193,16 +195,8 @@ public class MainForm extends JFrameActionSender implements
 		btnIdentify.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				StringMap args = new StringMap();
-				if (lastSelectedDeviceAntId != null
-						&& lastSelectedDeviceAntId != "") {
-					args.put("AntID", lastSelectedDeviceAntId);
-					args.put("AntPIN", txtPIN.getText());
-					onActionRequested(Action.WIRELESS_IDENTIFY, args);
-				} else if (lastSelectedDeviceSerial != null
-						&& lastSelectedDeviceSerial != "") {
-					args.put("Serial", lastSelectedDeviceSerial);
-					onActionRequested(Action.USB_IDENTIFY, args);
-				}
+				args.put("Serial", lastSelectedDeviceSerial);
+				onActionRequested(Action.USB_IDENTIFY, args);
 			}
 		});
 
@@ -211,21 +205,9 @@ public class MainForm extends JFrameActionSender implements
 		btnInitialize.setEnabled(false);
 		btnInitialize.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (lastSelectedDeviceSerial != null
-						&& lastSelectedDeviceSerial != "") {
-					if (usbInitializeDialog != null) {
-						usbInitializeDialog
-								.setDeviceSerial(lastSelectedDeviceSerial);
-						usbInitializeDialog.setVisible(true);
-					}
-				} else if (lastSelectedDeviceAntId != null
-						&& lastSelectedDeviceAntId != "") {
-					if (wirelessInitializeDialog != null) {
-						wirelessInitializeDialog
-								.setDeviceAntId(lastSelectedDeviceAntId);
-						wirelessInitializeDialog.setAntPin(txtPIN.getText());
-						wirelessInitializeDialog.setVisible(true);
-					}
+				if (usbInitializeDialog != null) {
+					usbInitializeDialog.setDeviceSerial(lastSelectedDeviceSerial);
+					usbInitializeDialog.setVisible(true);
 				}
 			}
 		});
@@ -242,10 +224,39 @@ public class MainForm extends JFrameActionSender implements
 			}
 		});
 
-		btnBurst = new JButton("Burst");
-		pnlNorth.add(btnBurst);
-		btnBurst.setEnabled(false);
-		btnBurst.addActionListener(new ActionListener() {
+		JSeparator separator_2 = new JSeparator();
+		pnlNorth.add(separator_2);
+
+		btnWirelessIdentify = new JButton("Identify");
+		btnWirelessIdentify.setEnabled(false);
+		btnWirelessIdentify.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				StringMap args = new StringMap();
+				args.put("AntID", lastSelectedDeviceAntId);
+				args.put("AntPIN", txtPIN.getText());
+				onActionRequested(Action.WIRELESS_IDENTIFY, args);
+			}
+		});
+		pnlNorth.add(btnWirelessIdentify);
+
+		btnWirelessInitialize = new JButton("Initialize");
+		btnWirelessInitialize.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if (wirelessInitializeDialog != null) {
+					wirelessInitializeDialog
+							.setDeviceAntId(lastSelectedDeviceAntId);
+					wirelessInitializeDialog.setAntPin(txtPIN.getText());
+					wirelessInitializeDialog.setVisible(true);
+				}
+			}
+		});
+		btnWirelessInitialize.setEnabled(false);
+		pnlNorth.add(btnWirelessInitialize);
+
+		btnWirelessBurst = new JButton("Burst");
+		pnlNorth.add(btnWirelessBurst);
+		btnWirelessBurst.setEnabled(false);
+		btnWirelessBurst.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (wirelessBurstDialog != null) {
 					wirelessBurstDialog.setDeviceAntId(lastSelectedDeviceAntId);
@@ -255,10 +266,10 @@ public class MainForm extends JFrameActionSender implements
 			}
 		});
 
-		btnRealTime = new JButton("Real Time");
-		pnlNorth.add(btnRealTime);
-		btnRealTime.setEnabled(false);
-		btnRealTime.addActionListener(new ActionListener() {
+		btnWirelessRealTime = new JButton("Real Time");
+		pnlNorth.add(btnWirelessRealTime);
+		btnWirelessRealTime.setEnabled(false);
+		btnWirelessRealTime.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (wirelessRealTimeDialog != null) {
 					wirelessRealTimeDialog
@@ -333,7 +344,7 @@ public class MainForm extends JFrameActionSender implements
 								table.getSelectedRow(), 1);
 						if (tmp != null)
 							lastSelectedDeviceAntId = tmp.toString();
-						
+
 						updateUI();
 					}
 				});
@@ -361,8 +372,10 @@ public class MainForm extends JFrameActionSender implements
 		if (lastSelectedDeviceAntId != null && lastSelectedDeviceAntId != "") {
 			wireless = true;
 		}
-		btnBurst.setEnabled(wireless);
-		btnRealTime.setEnabled(wireless);
+		btnWirelessIdentify.setEnabled(usb);
+		btnWirelessInitialize.setEnabled(usb);
+		btnWirelessBurst.setEnabled(wireless);
+		btnWirelessRealTime.setEnabled(wireless);
 	}
 
 	/**
