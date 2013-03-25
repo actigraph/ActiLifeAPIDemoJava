@@ -35,7 +35,7 @@ public class WirelessInitializeDialog extends WirelessJDialogActionSender {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				// init options
 				StringMap initOptions = new StringMap();
-				initOptions.put("startdatetime", ISO8601DateParser.toString(Utils.getDateAddMinutesFromNow(2)));
+				initOptions.put("startdatetime", Utils.getUTCNowPlusMinutes(1));
 				// no stopdatetime
 				initOptions.put("SampleRate", "40");
 				initOptions.put("Axis", "3");
