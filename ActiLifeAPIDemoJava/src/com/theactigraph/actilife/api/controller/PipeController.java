@@ -70,16 +70,16 @@ public class PipeController implements IActionSenderListener {
 						if (pipe != null && !exceptionOccurred)
 							return;
 
-						onMessageToDebug("*** Attempting to connect pipe");
+						onMessageToDebug("*** Attempting to connect to ActiLife");
 						pipe = new RandomAccessFile("\\\\.\\pipe\\actilifeapi",
 								"rw");
-						onMessageToDebug("*** Pipe connected\n\n");
+						onMessageToDebug("*** Connected to ActiLife\n\n");
 
 						exceptionOccurred = false;
 
 					} catch (FileNotFoundException fnfe) {
 
-						onMessageToDebug("*** Could not connect to pipe\n\n");
+						onMessageToDebug("*** Could not connect to ActiLife\n\n");
 						try {
 							Thread.sleep(500);
 						} catch (InterruptedException e) {
