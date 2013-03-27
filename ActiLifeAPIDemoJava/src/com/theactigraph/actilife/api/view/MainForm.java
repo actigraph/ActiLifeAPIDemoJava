@@ -87,17 +87,6 @@ public class MainForm extends JFrameActionSender implements
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 
-		JMenu mnNewMenu = new JMenu("File");
-		menuBar.add(mnNewMenu);
-
-		JMenuItem mntmFileExit = new JMenuItem("Exit");
-		mntmFileExit.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				System.exit(0); // probably not the best! ;)
-			}
-		});
-		mnNewMenu.add(mntmFileExit);
-
 		JMenu mnNewMenu_1 = new JMenu("ActiLife");
 		menuBar.add(mnNewMenu_1);
 
