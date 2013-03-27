@@ -131,40 +131,6 @@ public class MainForm extends JFrameActionSender implements
 		});
 		mnNewMenu_1.add(mntmActiLifeRestore);
 
-		JMenu mnUsb = new JMenu("USB");
-		menuBar.add(mnUsb);
-
-		JMenuItem mntmUSBList = new JMenuItem("List");
-		mntmUSBList.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				onActionRequested(Action.USB_LIST, null);
-			}
-		});
-		mnUsb.add(mntmUSBList);
-
-		JMenu mnWireless = new JMenu("Wireless");
-		menuBar.add(mnWireless);
-
-		JMenuItem mntmWirelessStart = new JMenuItem("Start");
-		mntmWirelessStart.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				StringMap args = new StringMap();
-				args.put("AntPIN", txtPIN.getText());
-				onActionRequested(Action.WIRELESS_SCAN_START, args);
-				updateUI();
-			}
-		});
-		mnWireless.add(mntmWirelessStart);
-
-		JMenuItem mntmWirelessStop = new JMenuItem("Stop");
-		mntmWirelessStop.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				onActionRequested(Action.WIRELESS_SCAN_STOP, null);
-				updateUI();
-			}
-		});
-		mnWireless.add(mntmWirelessStop);
-
 		JMenu mnHelp = new JMenu("Help");
 		menuBar.add(mnHelp);
 
@@ -191,6 +157,14 @@ public class MainForm extends JFrameActionSender implements
 		
 		JLabel lblUsb = new JLabel("USB");
 		pnlNorth.add(lblUsb);
+		
+		JButton btnList = new JButton("List");
+		btnList.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				onActionRequested(Action.USB_LIST, null);
+			}
+		});
+		pnlNorth.add(btnList);
 
 		btnIdentify = new JButton("Identify");
 		pnlNorth.add(btnIdentify);
@@ -243,6 +217,26 @@ public class MainForm extends JFrameActionSender implements
 		
 		JLabel lblWireless = new JLabel("Wireless");
 		pnlNorth.add(lblWireless);
+		
+		JButton btnWirelessStart = new JButton("Start");
+		btnWirelessStart.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				StringMap args = new StringMap();
+				args.put("AntPIN", txtPIN.getText());
+				onActionRequested(Action.WIRELESS_SCAN_START, args);
+				updateUI();
+			}
+		});
+		pnlNorth.add(btnWirelessStart);
+		
+		JButton btnWirelessStop = new JButton("Stop");
+		btnWirelessStop.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				onActionRequested(Action.WIRELESS_SCAN_STOP, null);
+				updateUI();
+			}
+		});
+		pnlNorth.add(btnWirelessStop);
 		pnlNorth.add(btnWirelessIdentify);
 
 		btnWirelessInitialize = new JButton("Initialize");
