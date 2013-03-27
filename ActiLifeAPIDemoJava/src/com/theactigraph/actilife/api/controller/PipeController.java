@@ -1,5 +1,6 @@
 package com.theactigraph.actilife.api.controller;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
@@ -47,6 +48,10 @@ public class PipeController implements IActionSenderListener {
 
 	private String lastAction = null;
 
+	private final Object exceptionLock = new Object();
+
+	private boolean exceptionOccurred = false;
+
 	/**
 	 * Attempts to connect to ActiLife via a named pipe. Starts watching for
 	 * responses from ActiLife. Notifies listeners (view) when data is received.
@@ -54,6 +59,36 @@ public class PipeController implements IActionSenderListener {
 	public PipeController() {
 		startPipeWatcher();
 		gson = new GsonBuilder().create();
+	}
+
+	private void connectPipe() {
+
+		while (true) {
+			synchronized (exceptionLock) {
+				synchronized (pipeLock) {
+					try {
+						if (pipe != null && !exceptionOccurred)
+							return;
+
+						onMessageToDebug("*** Attempting to connect pipe");
+						pipe = new RandomAccessFile("\\\\.\\pipe\\actilifeapi",
+								"rw");
+						onMessageToDebug("*** Pipe connected\n\n");
+
+						exceptionOccurred = false;
+
+					} catch (FileNotFoundException fnfe) {
+
+						onMessageToDebug("*** Could not connect to pipe\n\n");
+						try {
+							Thread.sleep(500);
+						} catch (InterruptedException e) {
+							//
+						}
+					}
+				}
+			}
+		}
 	}
 
 	/**
@@ -65,29 +100,34 @@ public class PipeController implements IActionSenderListener {
 			public void run() {
 				while (true) {
 					try {
-						if (pipe == null) {
-							pipe = new RandomAccessFile(
-									"\\\\.\\pipe\\actilifeapi", "rw");
-						}
+						connectPipe();
+
 						StringBuilder buffer = new StringBuilder();
 						byte[] b = new byte[1024];
-						while (true) {
+
+						while (pipe != null && !exceptionOccurred) {
 							long pipeLength = pipe.length();
 							if (pipeLength == 0) {
 								try {
 									Thread.sleep(100);
 								} catch (InterruptedException ex) {
+									synchronized (exceptionLock) {
+										exceptionOccurred = true;
+									}
 									onExceptionRaised(ex);
 								}
 								continue;
 							}
+
 							int bytesRead = 0;
 							synchronized (pipeLock) {
 								bytesRead = pipe.read(b, 0, b.length);
 							}
+
 							if (bytesRead > 0) {
 								buffer.append(new String(b, 0, bytesRead));
 							}
+
 							if (buffer.length() > 0
 									&& buffer.toString().endsWith("\r\n")) {
 								handleResponse(buffer.toString());
@@ -95,7 +135,12 @@ public class PipeController implements IActionSenderListener {
 							}
 						}
 
-					} catch (IOException ioe) {
+					} catch (Exception ioe) {
+						
+						onMessageToDebug("*** Problem receiving message");
+						synchronized (exceptionLock) {
+							exceptionOccurred = true;
+						}
 						onExceptionRaised(ioe);
 					}
 				}
@@ -116,18 +161,18 @@ public class PipeController implements IActionSenderListener {
 		if (jsonText == null) {
 			return;
 		}
-		
-		//for cleaner debug output
+
+		// for cleaner debug output
 		if (jsonText.startsWith("\n"))
 			jsonText = jsonText.replaceFirst("\n", "");
-		
+
 		try {
 			StringMap json = (StringMap) gson.fromJson(jsonText, Object.class);
 			Object success = json.get("Success");
 			Object response = json.get("Response");
 			Object error = json.get("Error");
 
-			//show the response in the debug console
+			// show the response in the debug console
 			onMessageToDebug(" <= " + jsonText);
 			if (!response.toString().equalsIgnoreCase(lastAction)) {
 				onMessageToDebug("\n\n");
@@ -514,21 +559,41 @@ public class PipeController implements IActionSenderListener {
 
 		action.put("Action", actionName);
 		action.put("Args", requestedArgs);
+		
+		sendAction(actionName, gson.toJson(action));
+	}
+	
+	private void sendAction(final String actionName, final String json)
+	{
+		Runnable sender = new Runnable() {
+			public void run() {
+				
+				// for prettier debug output :-/
+				if (lastAction != null && !actionName.equalsIgnoreCase(lastAction)) {
+					onMessageToDebug("\n\n");
+				}
+				lastAction = actionName;
 
-		// for prettier debug output :-/
-		if (lastAction != null && !actionName.toString().equalsIgnoreCase(lastAction)) {
-			onMessageToDebug("\n\n");
-		}
-		lastAction = actionName;
+				onMessageToDebug(" => " + json);
 
-		String actionJSON = gson.toJson(action);
-		onMessageToDebug(" => " + actionJSON);
-		try {
-			synchronized (pipeLock) {
-				pipe.write(actionJSON.getBytes());
+				while (true) {
+					connectPipe();
+					try {
+						synchronized (pipeLock) {
+							pipe.write(json.getBytes());
+							break;
+						}
+					} catch (IOException e) {
+						
+						onMessageToDebug("*** Problem sending message");
+						
+						synchronized (exceptionLock) {
+							exceptionOccurred = true;
+						}
+					}
+				}
 			}
-		} catch (Exception e) {
-			onExceptionRaised(e);
-		}
+		};
+		new Thread(sender).start();
 	}
 }
