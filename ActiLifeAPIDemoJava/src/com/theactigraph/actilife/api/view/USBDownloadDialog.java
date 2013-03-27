@@ -60,6 +60,7 @@ public class USBDownloadDialog extends JDialogActionSender {
 					agdOptions.put("Lux", "true");
 					agdOptions.put("HR", "true");
 					agdOptions.put("Inclonometer", "true");
+					agdOptions.put("EpochLengthInSeconds", "1");
 					// bio data
 					StringMap bioData = new StringMap();
 					bioData.put("SubjectName", "John Doe");
