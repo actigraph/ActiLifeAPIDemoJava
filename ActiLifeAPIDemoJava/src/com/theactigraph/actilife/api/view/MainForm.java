@@ -2,13 +2,17 @@ package com.theactigraph.actilife.api.view;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.google.gson.internal.StringMap;
 import com.theactigraph.actilife.api.models.Action;
@@ -27,6 +31,8 @@ import java.awt.BorderLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import java.awt.FlowLayout;
+
+import javax.swing.JFileChooser;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
@@ -43,7 +49,6 @@ public class MainForm extends JFrameActionSender implements
 	private WirelessRealTimeDialog wirelessRealTimeDialog;
 	private WirelessBurstDialog wirelessBurstDialog;
 	private WirelessInitializeDialog wirelessInitializeDialog;
-	private USBDownloadDialog usbDownloadDialog;
 	private USBInitializeDialog usbInitializeDialog;
 
 	private JFrame refToThis;
@@ -77,9 +82,6 @@ public class MainForm extends JFrameActionSender implements
 		wirelessInitializeDialog = new WirelessInitializeDialog(refToThis,
 				false);
 		wirelessInitializeDialog.setLocationRelativeTo(refToThis);
-
-		usbDownloadDialog = new USBDownloadDialog(refToThis, false);
-		usbDownloadDialog.setLocationRelativeTo(refToThis);
 
 		usbInitializeDialog = new USBInitializeDialog(refToThis, false);
 		usbInitializeDialog.setLocationRelativeTo(refToThis);
@@ -183,9 +185,45 @@ public class MainForm extends JFrameActionSender implements
 		btnDownload.setEnabled(false);
 		btnDownload.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (usbDownloadDialog != null) {
-					usbDownloadDialog.setDeviceSerial(lastSelectedDeviceSerial);
-					usbDownloadDialog.setVisible(true);
+				JFileChooser fileopen = new JFileChooser();
+				FileFilter filter = new FileNameExtensionFilter(".agd files", "AGD");
+				fileopen.addChoosableFileFilter(filter);
+				int ret = fileopen.showSaveDialog(null);
+				if (ret == JFileChooser.APPROVE_OPTION) {
+					File file = fileopen.getSelectedFile();
+					// output formats
+					LinkedList formats = new LinkedList();
+					formats.add("agd");
+					formats.add("gt3x");
+					// agd options
+					StringMap agdOptions = new StringMap();
+					agdOptions.put("Axis", "3");
+					agdOptions.put("Steps", "true");
+					agdOptions.put("Lux", "true");
+					agdOptions.put("HR", "true");
+					agdOptions.put("Inclonometer", "true");
+					agdOptions.put("EpochLengthInSeconds", "1");
+					// bio data
+					StringMap bioData = new StringMap();
+					bioData.put("SubjectName", "John Doe");
+					bioData.put("Sex", "Male");
+					bioData.put("Height", "182.9"); //cm
+					bioData.put("Weight", "175.8"); //lb
+					bioData.put("Age", "32");
+					bioData.put("Race", "White / Caucasian");
+					bioData.put("DateOfBirth", "07/15/1980");
+					bioData.put("Limb", "Waist");
+					bioData.put("Side", "Right");
+					bioData.put("Dominance", "Dominant");
+					// args
+					StringMap args = new StringMap();
+					args.put("Serial", lastSelectedDeviceSerial);
+					args.put("FileUseMetricUnits", "false");
+					args.put("FileFormat", formats);
+					args.put("FileOutputPath", file.getPath());
+					args.put("AGDOptions", agdOptions);
+					args.put("BioData", bioData);
+					onActionRequested(Action.USB_DOWNLOAD, args);
 				}
 			}
 		});
@@ -382,9 +420,6 @@ public class MainForm extends JFrameActionSender implements
 		}
 		if (wirelessInitializeDialog != null) {
 			wirelessInitializeDialog.addListener(l);
-		}
-		if (usbDownloadDialog != null) {
-			usbDownloadDialog.addListener(l);
 		}
 		if (usbInitializeDialog != null) {
 			usbInitializeDialog.addListener(l);
