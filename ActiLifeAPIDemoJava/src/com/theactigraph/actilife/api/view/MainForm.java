@@ -49,7 +49,6 @@ public class MainForm extends JFrameActionSender implements
 	private JTable table;
 	private WirelessRealTimeDialog wirelessRealTimeDialog;
 	private WirelessBurstDialog wirelessBurstDialog;
-	private WirelessInitializeDialog wirelessInitializeDialog;
 
 	private JFrame refToThis;
 	private String lastSelectedDeviceAntId;
@@ -78,10 +77,6 @@ public class MainForm extends JFrameActionSender implements
 
 		wirelessBurstDialog = new WirelessBurstDialog(refToThis, false);
 		wirelessBurstDialog.setLocationRelativeTo(refToThis);
-
-		wirelessInitializeDialog = new WirelessInitializeDialog(refToThis,
-				false);
-		wirelessInitializeDialog.setLocationRelativeTo(refToThis);
 
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -297,12 +292,40 @@ public class MainForm extends JFrameActionSender implements
 		btnWirelessInitialize = new JButton("Initialize");
 		btnWirelessInitialize.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if (wirelessInitializeDialog != null) {
-					wirelessInitializeDialog
-							.setDeviceAntId(lastSelectedDeviceAntId);
-					wirelessInitializeDialog.setAntPin(txtPIN.getText());
-					wirelessInitializeDialog.setVisible(true);
-				}
+
+				// init options
+				StringMap initOptions = new StringMap();
+				initOptions.put("startdatetime", Utils.getUTCNowPlusMinutes(1));
+				// no stopdatetime
+				initOptions.put("SampleRate", "40");
+				initOptions.put("Axis", "3");
+				initOptions.put("Steps", "true");
+				initOptions.put("Inclinometer", "true");
+				initOptions.put("FlashLEDWhileActive", "false");
+				initOptions.put("FlashLEDInDelay", "true");
+				initOptions.put("HeartRate", "false");
+				initOptions.put("Lux", "true");
+				initOptions.put("DisableSleepMode", "true");
+				initOptions.put("DataSummary", "true");
+				// bio data
+				StringMap bioData = new StringMap();
+				bioData.put("SubjectName", "John Doe");
+				bioData.put("Sex", "Male");
+				bioData.put("Height", "182.9"); // cm
+				bioData.put("Weight", "175.8"); // lb
+				bioData.put("Age", "32");
+				bioData.put("Race", "White / Caucasian");
+				bioData.put("DateOfBirth", "1980-01-01T13:00:00Z");
+				bioData.put("Limb", "Waist");
+				bioData.put("Side", "Right");
+				bioData.put("Dominance", "Dominant");
+				// args
+				StringMap args = new StringMap();
+				args.put("AntID", lastSelectedDeviceAntId);
+				args.put("AntPIN", txtPIN.getText());
+				args.put("BioData", bioData);
+				args.put("InitOptions", initOptions);
+				onActionRequested(Action.WIRELESS_INITIALIZE, args);
 			}
 		});
 		btnWirelessInitialize.setEnabled(false);
@@ -445,9 +468,6 @@ public class MainForm extends JFrameActionSender implements
 		}
 		if (wirelessBurstDialog != null) {
 			wirelessBurstDialog.addListener(l);
-		}
-		if (wirelessInitializeDialog != null) {
-			wirelessInitializeDialog.addListener(l);
 		}
 	}
 
