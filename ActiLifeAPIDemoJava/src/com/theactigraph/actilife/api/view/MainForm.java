@@ -68,7 +68,7 @@ public class MainForm extends JFrameActionSender implements
 	public MainForm() {
 		setTitle("ActiLife API Demo");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		setSize(1000, 600);
+		setSize(1100, 600);
 
 		refToThis = this;
 
