@@ -45,13 +45,18 @@ public class WirelessBurstDialog extends WirelessJDialogActionSender {
 				int ret = fileopen.showSaveDialog(null);
 				if (ret == JFileChooser.APPROVE_OPTION) {
 					File file = fileopen.getSelectedFile();
+
+					StringBuilder path = new StringBuilder(file.getPath());
+					if (!file.getPath().endsWith(".gt3x"))
+						path.append(".gt3x");
+					
 					StringMap args = new StringMap();
 					args.put("AntID", deviceAntId);
 					args.put("AntPIN", antPin);
 					args.put("Minutes", spnMinutes.getValue().toString());
 					args.put("FileUseMetricUnits", "false");
 					args.put("FileFormat", "agd");
-					args.put("FileOutputPath", file.getPath());
+					args.put("FileOutputPath", path);
 					onActionRequested(Action.WIRELESS_BURST, args);
 				}
 			}

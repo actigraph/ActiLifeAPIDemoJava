@@ -217,10 +217,12 @@ public class MainForm extends JFrameActionSender implements
 				int ret = fileopen.showSaveDialog(null);
 				if (ret == JFileChooser.APPROVE_OPTION) {
 					File file = fileopen.getSelectedFile();
+					
 					// output formats
 					LinkedList formats = new LinkedList();
 					formats.add("agd");
 					formats.add("gt3x");
+					
 					// agd options
 					StringMap agdOptions = new StringMap();
 					agdOptions.put("Axis", "3");
@@ -229,6 +231,7 @@ public class MainForm extends JFrameActionSender implements
 					agdOptions.put("HR", "true");
 					agdOptions.put("Inclonometer", "true");
 					agdOptions.put("EpochLengthInSeconds", "1");
+					
 					// bio data
 					StringMap bioData = new StringMap();
 					bioData.put("SubjectName", "John Doe");
@@ -241,12 +244,17 @@ public class MainForm extends JFrameActionSender implements
 					bioData.put("Limb", "Waist");
 					bioData.put("Side", "Right");
 					bioData.put("Dominance", "Dominant");
+
+					StringBuilder path = new StringBuilder(file.getPath());
+					if (!file.getPath().endsWith(".gt3x"))
+						path.append(".gt3x");
+					
 					// args
 					StringMap args = new StringMap();
 					args.put("Serial", lastSelectedDeviceSerial);
 					args.put("FileUseMetricUnits", "false");
 					args.put("FileFormat", formats);
-					args.put("FileOutputPath", file.getPath());
+					args.put("FileOutputPath", path.toString());
 					args.put("AGDOptions", agdOptions);
 					args.put("BioData", bioData);
 					onActionRequested(Action.USB_DOWNLOAD, args);
