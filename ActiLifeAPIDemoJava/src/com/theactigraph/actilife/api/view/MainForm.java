@@ -377,7 +377,7 @@ public class MainForm extends JFrameActionSender implements
 
 		txtPIN = new JTextField();
 		pnlNorth.add(txtPIN);
-		txtPIN.setText("0000");
+		txtPIN.setText("");
 		txtPIN.setColumns(4);
 
 		JSeparator separator_1 = new JSeparator();
