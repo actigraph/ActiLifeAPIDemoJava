@@ -347,6 +347,7 @@ public class PipeController implements IActionSenderListener {
 			}
 			if (response.toString().equalsIgnoreCase("USBInitialize")) {
 				onMessageToDisplay("Device intialized");
+				sendAction("USBList", "{\"Action\": \"USBList\"}");
 				return;
 			}
 			if (response.toString().equalsIgnoreCase("USBDownload")) {
