@@ -15,6 +15,7 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.google.gson.internal.StringMap;
+import com.theactigraph.actilife.Utils;
 import com.theactigraph.actilife.api.models.Action;
 import com.theactigraph.actilife.api.models.DeviceTableModel;
 import com.theactigraph.actilife.api.models.events.DeviceEventObject;
@@ -49,7 +50,6 @@ public class MainForm extends JFrameActionSender implements
 	private WirelessRealTimeDialog wirelessRealTimeDialog;
 	private WirelessBurstDialog wirelessBurstDialog;
 	private WirelessInitializeDialog wirelessInitializeDialog;
-	private USBInitializeDialog usbInitializeDialog;
 
 	private JFrame refToThis;
 	private String lastSelectedDeviceAntId;
@@ -82,9 +82,6 @@ public class MainForm extends JFrameActionSender implements
 		wirelessInitializeDialog = new WirelessInitializeDialog(refToThis,
 				false);
 		wirelessInitializeDialog.setLocationRelativeTo(refToThis);
-
-		usbInitializeDialog = new USBInitializeDialog(refToThis, false);
-		usbInitializeDialog.setLocationRelativeTo(refToThis);
 
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -173,10 +170,41 @@ public class MainForm extends JFrameActionSender implements
 		btnInitialize.setEnabled(false);
 		btnInitialize.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (usbInitializeDialog != null) {
-					usbInitializeDialog.setDeviceSerial(lastSelectedDeviceSerial);
-					usbInitializeDialog.setVisible(true);
-				}
+				// init options
+				StringMap initOptions = new StringMap();
+				initOptions.put("startdatetime", Utils.getUTCNowPlusMinutes(1));
+				// no stopdatetime
+				initOptions.put("SampleRate", "40");
+				initOptions.put("Axis", "3");
+				initOptions.put("Steps", "true");
+				initOptions.put("Inclinometer", "true");
+				initOptions.put("FlashLEDWhileActive", "false");
+				initOptions.put("FlashLEDInDelay", "true");
+				initOptions.put("HeartRate", "false");
+				initOptions.put("Lux", "true");
+				initOptions.put("DisableSleepMode", "true");
+				initOptions.put("AntWireless", "true");
+				initOptions.put("DataSummary", "true");
+				// bio data
+				StringMap bioData = new StringMap();
+				bioData.put("SubjectName", "John Doe");
+				bioData.put("Sex", "Male");
+				bioData.put("Height", "182.9"); // cm
+				bioData.put("Weight", "175.8"); // lb
+				bioData.put("Age", "32");
+				bioData.put("Race", "White / Caucasian");
+				bioData.put("DateOfBirth", "1980-01-01T13:00:00Z");
+				bioData.put("Limb", "Waist");
+				bioData.put("Side", "Right");
+				bioData.put("Dominance", "Dominant");
+				// args
+				StringMap args = new StringMap();
+				args.put("Serial", lastSelectedDeviceSerial);
+				args.put("FileUseMetricUnits", "false");
+				args.put("FileFormat", "agd");
+				args.put("BioData", bioData);
+				args.put("InitOptions", initOptions);
+				onActionRequested(Action.USB_INITIALIZE, args);
 			}
 		});
 
@@ -420,9 +448,6 @@ public class MainForm extends JFrameActionSender implements
 		}
 		if (wirelessInitializeDialog != null) {
 			wirelessInitializeDialog.addListener(l);
-		}
-		if (usbInitializeDialog != null) {
-			usbInitializeDialog.addListener(l);
 		}
 	}
 
