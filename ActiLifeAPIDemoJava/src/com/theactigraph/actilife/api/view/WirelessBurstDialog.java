@@ -5,6 +5,7 @@ import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.filechooser.FileSystemView;
 
 import com.google.gson.internal.StringMap;
 import com.theactigraph.actilife.api.models.Action;
@@ -39,7 +40,9 @@ public class WirelessBurstDialog extends WirelessJDialogActionSender {
         btnBurst.setText("Burst");
 		btnBurst.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				JFileChooser fileopen = new JFileChooser();
+				//default to desktop: http://fdegrelle.over-blog.com/article-11163566.html
+				FileSystemView fsv = FileSystemView.getFileSystemView();
+				JFileChooser fileopen = new JFileChooser(fsv.getRoots()[0]);
 				FileFilter filter = new FileNameExtensionFilter(".gt3x files", "gt3x");
 				fileopen.addChoosableFileFilter(filter);
 				int ret = fileopen.showSaveDialog(null);
