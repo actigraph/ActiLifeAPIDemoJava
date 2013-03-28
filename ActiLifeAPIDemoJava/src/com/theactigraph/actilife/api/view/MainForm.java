@@ -13,6 +13,7 @@ import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.filechooser.FileSystemView;
 
 import com.google.gson.internal.StringMap;
 import com.theactigraph.actilife.Utils;
@@ -208,7 +209,9 @@ public class MainForm extends JFrameActionSender implements
 		btnDownload.setEnabled(false);
 		btnDownload.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				JFileChooser fileopen = new JFileChooser();
+				//default to desktop: http://fdegrelle.over-blog.com/article-11163566.html
+				FileSystemView fsv = FileSystemView.getFileSystemView();
+				JFileChooser fileopen = new JFileChooser(fsv.getRoots()[0]);
 				FileFilter filter = new FileNameExtensionFilter(".agd files", "AGD");
 				fileopen.addChoosableFileFilter(filter);
 				int ret = fileopen.showSaveDialog(null);
