@@ -261,6 +261,7 @@ public class MainForm extends JFrameActionSender implements
 					args.put("FileOutputPath", path.toString());
 					args.put("AGDOptions", agdOptions);
 					args.put("BioData", bioData);
+					args.put("IncludeBioData", "true");
 					onActionRequested(Action.USB_DOWNLOAD, args);
 				}
 			}
