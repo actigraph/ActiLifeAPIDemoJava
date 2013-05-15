@@ -187,8 +187,8 @@ public class MainForm extends JFrameActionSender implements
 				StringMap bioData = new StringMap();
 				bioData.put("SubjectName", "John Doe");
 				bioData.put("Sex", "Male");
-				bioData.put("Height", "182.9"); // cm
-				bioData.put("Weight", "175.8"); // lb
+				bioData.put("Height", "182.88"); // cm (72 inches)
+				bioData.put("Weight", "90.2649"); // kg (199 lbs)
 				bioData.put("Age", "32");
 				bioData.put("Race", "White / Caucasian");
 				bioData.put("DateOfBirth", "1980-01-01T13:00:00Z");
@@ -240,8 +240,8 @@ public class MainForm extends JFrameActionSender implements
 					StringMap bioData = new StringMap();
 					bioData.put("SubjectName", "John Doe");
 					bioData.put("Sex", "Male");
-					bioData.put("Height", "182.9"); // cm
-					bioData.put("Weight", "175.8"); // lb
+					bioData.put("Height", "182.88"); // cm (72 inches)
+					bioData.put("Weight", "90.2649"); // kg (199 lbs)
 					bioData.put("Age", "32");
 					bioData.put("Race", "White / Caucasian");
 					bioData.put("DateOfBirth", "07/15/1980");
@@ -328,8 +328,8 @@ public class MainForm extends JFrameActionSender implements
 				StringMap bioData = new StringMap();
 				bioData.put("SubjectName", "John Doe");
 				bioData.put("Sex", "Male");
-				bioData.put("Height", "182.9"); // cm
-				bioData.put("Weight", "175.8"); // lb
+				bioData.put("Height", "182.88"); // cm (72 inches)
+				bioData.put("Weight", "90.2649"); // kg (199 lbs)
 				bioData.put("Age", "32");
 				bioData.put("Race", "White / Caucasian");
 				bioData.put("DateOfBirth", "1980-01-01T13:00:00Z");
