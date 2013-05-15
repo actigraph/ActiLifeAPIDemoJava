@@ -12,4 +12,6 @@ public interface IResponseHandlerListener extends EventListener {
 	public void deviceDiscovered(DeviceEventObject o);
 
 	public void gotRealTimeData(RealTimeSampleEventObject o);
+	
+	public void fileCreated(FileCreatedEventObject o);
 }

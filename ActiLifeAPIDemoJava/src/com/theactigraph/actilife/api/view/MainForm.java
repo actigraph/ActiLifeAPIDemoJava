@@ -21,6 +21,7 @@ import com.theactigraph.actilife.api.models.Action;
 import com.theactigraph.actilife.api.models.DeviceTableModel;
 import com.theactigraph.actilife.api.models.events.DeviceEventObject;
 import com.theactigraph.actilife.api.models.events.ExceptionEventObject;
+import com.theactigraph.actilife.api.models.events.FileCreatedEventObject;
 import com.theactigraph.actilife.api.models.events.IActionSenderListener;
 import com.theactigraph.actilife.api.models.events.IResponseHandlerListener;
 import com.theactigraph.actilife.api.models.events.MessageEventObject;
@@ -89,8 +90,8 @@ public class MainForm extends JFrameActionSender implements
 		mntmActiLifeLaunch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					String path = "C:\\Program Files (x86)\\ActiGraph\\ActiLife6\\ActiLife.exe";
-					Runtime.getRuntime().exec(path);
+					Runtime.getRuntime()
+							.exec("C:\\Program Files (x86)\\ActiGraph\\ActiLife6\\ActiLife.exe");
 				} catch (IOException ex) {
 					Logger.getLogger(MainForm.class.getName()).log(
 							Level.SEVERE, null, ex);
@@ -138,10 +139,10 @@ public class MainForm extends JFrameActionSender implements
 		FlowLayout fl_pnlNorth = (FlowLayout) pnlNorth.getLayout();
 		fl_pnlNorth.setAlignment(FlowLayout.LEFT);
 		getContentPane().add(pnlNorth, BorderLayout.NORTH);
-		
+
 		JLabel lblUsb = new JLabel("USB");
 		pnlNorth.add(lblUsb);
-		
+
 		JButton btnList = new JButton("List");
 		btnList.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -209,20 +210,22 @@ public class MainForm extends JFrameActionSender implements
 		btnDownload.setEnabled(false);
 		btnDownload.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//default to desktop: http://fdegrelle.over-blog.com/article-11163566.html
+				// default to desktop:
+				// http://fdegrelle.over-blog.com/article-11163566.html
 				FileSystemView fsv = FileSystemView.getFileSystemView();
 				JFileChooser fileopen = new JFileChooser(fsv.getRoots()[0]);
-				FileFilter filter = new FileNameExtensionFilter(".agd files", "AGD");
+				FileFilter filter = new FileNameExtensionFilter(".agd files",
+						"AGD");
 				fileopen.addChoosableFileFilter(filter);
 				int ret = fileopen.showSaveDialog(null);
 				if (ret == JFileChooser.APPROVE_OPTION) {
 					File file = fileopen.getSelectedFile();
-					
+
 					// output formats
 					LinkedList formats = new LinkedList();
 					formats.add("agd");
 					formats.add("gt3x");
-					
+
 					// agd options
 					StringMap agdOptions = new StringMap();
 					agdOptions.put("Axis", "3");
@@ -231,13 +234,13 @@ public class MainForm extends JFrameActionSender implements
 					agdOptions.put("HR", "true");
 					agdOptions.put("Inclonometer", "true");
 					agdOptions.put("EpochLengthInSeconds", "1");
-					
+
 					// bio data
 					StringMap bioData = new StringMap();
 					bioData.put("SubjectName", "John Doe");
 					bioData.put("Sex", "Male");
-					bioData.put("Height", "182.9"); //cm
-					bioData.put("Weight", "175.8"); //lb
+					bioData.put("Height", "182.9"); // cm
+					bioData.put("Weight", "175.8"); // lb
 					bioData.put("Age", "32");
 					bioData.put("Race", "White / Caucasian");
 					bioData.put("DateOfBirth", "07/15/1980");
@@ -248,7 +251,7 @@ public class MainForm extends JFrameActionSender implements
 					StringBuilder path = new StringBuilder(file.getPath());
 					if (!file.getPath().endsWith(".gt3x"))
 						path.append(".gt3x");
-					
+
 					// args
 					StringMap args = new StringMap();
 					args.put("Serial", lastSelectedDeviceSerial);
@@ -275,10 +278,10 @@ public class MainForm extends JFrameActionSender implements
 				onActionRequested(Action.WIRELESS_IDENTIFY, args);
 			}
 		});
-		
+
 		JLabel lblWireless = new JLabel("Wireless");
 		pnlNorth.add(lblWireless);
-		
+
 		JButton btnWirelessStart = new JButton("Start");
 		btnWirelessStart.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -289,7 +292,7 @@ public class MainForm extends JFrameActionSender implements
 			}
 		});
 		pnlNorth.add(btnWirelessStart);
-		
+
 		JButton btnWirelessStop = new JButton("Stop");
 		btnWirelessStop.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -535,5 +538,25 @@ public class MainForm extends JFrameActionSender implements
 				.getRealTimeSample().getAxis1(), o.getRealTimeSample()
 				.getAxis2(), o.getRealTimeSample().getAxis3(), o
 				.getRealTimeSample().getLux(), o.getRealTimeSample().getHr());
+	}
+
+	@Override
+	public void fileCreated(FileCreatedEventObject o) {
+		try {
+			if (o.getAction() == Action.USB_DOWNLOAD
+					&& o.getPath().toString().endsWith(".agd"))
+
+				Runtime.getRuntime()
+						.exec(new String[] { "cmd.exe", "/C",
+								o.getPath().toString() });
+			else if (o.getAction() == Action.WIRELESS_BURST
+					&& o.getPath().endsWith(".gt3x"))
+				Runtime.getRuntime()
+						.exec(new String[] { "cmd.exe", "/C",
+								o.getPath().toString() });
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

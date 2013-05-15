@@ -12,11 +12,14 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
 import com.google.gson.internal.StringMap;
+import com.theactigraph.actilife.Utils;
+import com.theactigraph.actilife.api.models.Action;
 import com.theactigraph.actilife.api.models.Device;
 import com.theactigraph.actilife.api.models.RealTimeSample;
 import com.theactigraph.actilife.api.models.events.ActionEventObject;
 import com.theactigraph.actilife.api.models.events.DeviceEventObject;
 import com.theactigraph.actilife.api.models.events.ExceptionEventObject;
+import com.theactigraph.actilife.api.models.events.FileCreatedEventObject;
 import com.theactigraph.actilife.api.models.events.IActionSenderListener;
 import com.theactigraph.actilife.api.models.events.IResponseHandlerListener;
 import com.theactigraph.actilife.api.models.events.MessageEventObject;
@@ -283,15 +286,10 @@ public class PipeController implements IActionSenderListener {
 				return;
 			}
 			if (response.toString().equalsIgnoreCase("WirelessBurst")) {
-				onMessageToDisplay("Burst completed");
-				return;
-			}
-			if (response.toString().equalsIgnoreCase("WirelessBurst")) {
 				if (json.containsKey("Payload")) {
 					StringMap r = (StringMap) json.get("Payload");
 					if (r.containsKey("FileOutputPath")) {
-						onMessageToDisplay(r.get("FileOutputPath").toString()
-								+ " was successfully downloaded.");
+						onFileCreated(Action.WIRELESS_BURST, r.get("FileOutputPath").toString());
 					}
 				}
 				return;
@@ -351,7 +349,12 @@ public class PipeController implements IActionSenderListener {
 				return;
 			}
 			if (response.toString().equalsIgnoreCase("USBDownload")) {
-				onMessageToDisplay("Device downloaded");
+				if (json.containsKey("Payload")) {
+					StringMap p = (StringMap) json.get("Payload");
+					ArrayList paths = (ArrayList) p.get("file_output_paths");
+					for (int i = 0; i < paths.size(); i++)
+						onFileCreated(Action.USB_DOWNLOAD, paths.get(i).toString());
+				}
 				return;
 			}
 			if (response.toString().equalsIgnoreCase("USBIdentified")) {
@@ -596,5 +599,24 @@ public class PipeController implements IActionSenderListener {
 			}
 		};
 		new Thread(sender).start();
+	}
+
+	@SuppressWarnings("unchecked")
+	public void onFileCreated(Action action, String path) {
+		if (responseHandlerListeners != null
+				&& !responseHandlerListeners.isEmpty()) {
+			FileCreatedEventObject event = new FileCreatedEventObject(this, action, path);
+			Vector<IResponseHandlerListener> targets;
+			synchronized (this) {
+				targets = (Vector<IResponseHandlerListener>) responseHandlerListeners
+						.clone();
+			}
+			Enumeration<IResponseHandlerListener> e = targets.elements();
+			while (e.hasMoreElements()) {
+				IResponseHandlerListener l = (IResponseHandlerListener) e
+						.nextElement();
+				l.fileCreated(event);
+			}
+		}
 	}
 }
