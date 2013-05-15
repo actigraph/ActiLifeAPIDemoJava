@@ -182,6 +182,7 @@ public class MainForm extends JFrameActionSender implements
 				initOptions.put("DisableSleepMode", "true");
 				initOptions.put("AntWireless", "true");
 				initOptions.put("DataSummary", "true");
+				initOptions.put("DoNotUpgradeFW", "true");
 				// bio data
 				StringMap bioData = new StringMap();
 				bioData.put("SubjectName", "John Doe");
@@ -321,6 +322,7 @@ public class MainForm extends JFrameActionSender implements
 				initOptions.put("Lux", "true");
 				initOptions.put("DisableSleepMode", "true");
 				initOptions.put("DataSummary", "true");
+				initOptions.put("DoNotUpgradeFW", "true");
 				// bio data
 				StringMap bioData = new StringMap();
 				bioData.put("SubjectName", "John Doe");
