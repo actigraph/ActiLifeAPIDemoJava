@@ -146,7 +146,9 @@ public class MainForm extends JFrameActionSender implements
 		JButton btnList = new JButton("List");
 		btnList.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				onActionRequested(Action.USB_LIST, null);
+				StringMap args = new StringMap();
+				args.put("ContinueReportingAsync", "true");
+				onActionRequested(Action.USB_LIST, args);
 			}
 		});
 		pnlNorth.add(btnList);
