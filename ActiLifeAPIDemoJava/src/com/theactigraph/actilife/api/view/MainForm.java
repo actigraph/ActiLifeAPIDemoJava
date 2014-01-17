@@ -51,6 +51,7 @@ public class MainForm extends JFrameActionSender implements
 	private JTable table;
 	private WirelessRealTimeDialog wirelessRealTimeDialog;
 	private WirelessBurstDialog wirelessBurstDialog;
+	private ConvertFileDialog convertFileDialog;
 
 	private JFrame refToThis;
 	private String lastSelectedDeviceAntId;
@@ -80,60 +81,75 @@ public class MainForm extends JFrameActionSender implements
 		wirelessBurstDialog = new WirelessBurstDialog(refToThis, false);
 		wirelessBurstDialog.setLocationRelativeTo(refToThis);
 
+		convertFileDialog = new ConvertFileDialog(refToThis, false);
+		convertFileDialog.setLocationRelativeTo(refToThis);
+
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
-
-		JMenu mnNewMenu_1 = new JMenu("ActiLife");
-		menuBar.add(mnNewMenu_1);
-
-		JMenuItem mntmActiLifeLaunch = new JMenuItem("Launch");
-		mntmActiLifeLaunch.addActionListener(new ActionListener() {
+		
+				JMenu mnNewMenu_1 = new JMenu("ActiLife");
+				menuBar.add(mnNewMenu_1);
+				
+						JMenuItem mntmActiLifeLaunch = new JMenuItem("Launch");
+						mntmActiLifeLaunch.addActionListener(new ActionListener() {
+							public void actionPerformed(ActionEvent e) {
+								try {
+									Runtime.getRuntime()
+											.exec("C:\\Program Files (x86)\\ActiGraph\\ActiLife6\\ActiLife.exe");
+								} catch (IOException ex) {
+									Logger.getLogger(MainForm.class.getName()).log(
+											Level.SEVERE, null, ex);
+								}
+							}
+						});
+						mnNewMenu_1.add(mntmActiLifeLaunch);
+						
+								JMenuItem mntmActiLifeMinimize = new JMenuItem("Minimize");
+								mntmActiLifeMinimize.addActionListener(new ActionListener() {
+									public void actionPerformed(ActionEvent e) {
+										onActionRequested(Action.ACTILIFE_MINIMIZE, null);
+									}
+								});
+								mnNewMenu_1.add(mntmActiLifeMinimize);
+								
+										JMenuItem mntmActiLifeRestore = new JMenuItem("Restore");
+										mntmActiLifeRestore.addActionListener(new ActionListener() {
+											public void actionPerformed(ActionEvent e) {
+												onActionRequested(Action.ACTILIFE_RESTORE, null);
+											}
+										});
+										mnNewMenu_1.add(mntmActiLifeRestore);
+		
+		JMenu mnNewMenu = new JMenu("Tools");
+		menuBar.add(mnNewMenu);
+		
+		JMenuItem mntmConvertFile = new JMenuItem("Convert File");
+		mntmConvertFile.addActionListener(new ActionListener(){
+			@Override
 			public void actionPerformed(ActionEvent e) {
-				try {
-					Runtime.getRuntime()
-							.exec("C:\\Program Files (x86)\\ActiGraph\\ActiLife6\\ActiLife.exe");
-				} catch (IOException ex) {
-					Logger.getLogger(MainForm.class.getName()).log(
-							Level.SEVERE, null, ex);
-				}
+				convertFileDialog.setVisible(true);
 			}
 		});
-		mnNewMenu_1.add(mntmActiLifeLaunch);
-
-		JMenuItem mntmActiLifeMinimize = new JMenuItem("Minimize");
-		mntmActiLifeMinimize.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				onActionRequested(Action.ACTILIFE_MINIMIZE, null);
-			}
-		});
-		mnNewMenu_1.add(mntmActiLifeMinimize);
-
-		JMenuItem mntmActiLifeRestore = new JMenuItem("Restore");
-		mntmActiLifeRestore.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				onActionRequested(Action.ACTILIFE_RESTORE, null);
-			}
-		});
-		mnNewMenu_1.add(mntmActiLifeRestore);
-
-		JMenu mnHelp = new JMenu("Help");
-		menuBar.add(mnHelp);
-
-		JMenuItem mntmHelpActilifeVersion = new JMenuItem("ActiLife Version");
-		mntmHelpActilifeVersion.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				onActionRequested(Action.ACTILIFE_VERSION, null);
-			}
-		});
-		mnHelp.add(mntmHelpActilifeVersion);
-
-		JMenuItem mntmHelpApiVersion = new JMenuItem("API Version");
-		mntmHelpApiVersion.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				onActionRequested(Action.API_VERSION, null);
-			}
-		});
-		mnHelp.add(mntmHelpApiVersion);
+		mnNewMenu.add(mntmConvertFile);
+		
+				JMenu mnHelp = new JMenu("Help");
+				menuBar.add(mnHelp);
+				
+						JMenuItem mntmHelpActilifeVersion = new JMenuItem("ActiLife Version");
+						mntmHelpActilifeVersion.addActionListener(new ActionListener() {
+							public void actionPerformed(ActionEvent e) {
+								onActionRequested(Action.ACTILIFE_VERSION, null);
+							}
+						});
+						mnHelp.add(mntmHelpActilifeVersion);
+						
+								JMenuItem mntmHelpApiVersion = new JMenuItem("API Version");
+								mntmHelpApiVersion.addActionListener(new ActionListener() {
+									public void actionPerformed(ActionEvent e) {
+										onActionRequested(Action.API_VERSION, null);
+									}
+								});
+								mnHelp.add(mntmHelpApiVersion);
 
 		JPanel pnlNorth = new JPanel();
 		FlowLayout fl_pnlNorth = (FlowLayout) pnlNorth.getLayout();
@@ -228,6 +244,7 @@ public class MainForm extends JFrameActionSender implements
 					LinkedList formats = new LinkedList();
 					formats.add("agd");
 					formats.add("gt3x");
+					formats.add("rawcsv");
 
 					// agd options
 					StringMap agdOptions = new StringMap();
@@ -237,6 +254,12 @@ public class MainForm extends JFrameActionSender implements
 					agdOptions.put("HR", "true");
 					agdOptions.put("Inclonometer", "true");
 					agdOptions.put("EpochLengthInSeconds", "1");
+
+					// csv options
+					StringMap csvoptions = new StringMap();
+					csvoptions.put("IncludeTimestamps", true);
+					csvoptions.put("IncludeColumnHeaders", true);
+					csvoptions.put("IncludeMetadata", true);
 
 					// bio data
 					StringMap bioData = new StringMap();
@@ -259,9 +282,10 @@ public class MainForm extends JFrameActionSender implements
 					StringMap args = new StringMap();
 					args.put("Serial", lastSelectedDeviceSerial);
 					args.put("FileUseMetricUnits", "false");
-					args.put("FileFormat", formats);
+					args.put("FileFormats", formats);
 					args.put("FileOutputPath", path.toString());
 					args.put("AGDOptions", agdOptions);
+					args.put("CSVOptions", csvoptions);
 					args.put("BioData", bioData);
 					args.put("IncludeBioData", "true");
 					onActionRequested(Action.USB_DOWNLOAD, args);
@@ -487,6 +511,9 @@ public class MainForm extends JFrameActionSender implements
 		}
 		if (wirelessBurstDialog != null) {
 			wirelessBurstDialog.addListener(l);
+		}
+		if (convertFileDialog != null) {
+			convertFileDialog.addListener(l);
 		}
 	}
 

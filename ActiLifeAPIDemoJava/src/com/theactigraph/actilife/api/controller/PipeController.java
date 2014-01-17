@@ -524,6 +524,9 @@ public class PipeController implements IActionSenderListener {
 		case API_VERSION:
 			actionName = "APIVersion";
 			break;
+		case CONVERT_FILE:
+			actionName = "ConvertFile";
+			break;
 		case WIRELESS_SCAN_START:
 			actionName = "WirelessStart";
 			break;
